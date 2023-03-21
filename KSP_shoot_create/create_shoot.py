@@ -1,4 +1,3 @@
-
 from datetime import datetime
 import time
 from selenium.webdriver.support.ui import Select
@@ -47,6 +46,7 @@ def create_shoot():
         time.sleep(1)
         customer_input.send_keys(Keys.DOWN)
         customer_input.send_keys(Keys.ENTER)
+        time.sleep(2)
 
         # выбираю бильдредактора с помощью класса Select
         select = Select(browser.find_element(By.NAME, 'EditorContactID'))
@@ -54,13 +54,22 @@ def create_shoot():
 
         author_input = browser.find_element(By.ID, "AuthorContact")
         author_input.send_keys("Павленко Евгений Валентинович")
-        time.sleep(1)
+        time.sleep(2)
         author_input.send_keys(Keys.DOWN)
-        time.sleep(1)
+        time.sleep(2)
         author_input.send_keys(Keys.ENTER)
-        time.sleep(1)
+        time.sleep(2)
 
+        window_before = browser.window_handles[0]
         browser.find_element(By.ID, 'SubmitBtn').click()
+        window_after = browser.window_handles[1]
+        browser.minimize_window()
+        browser.switch_to.window(window_before)
+        browser.find_element(By.ID, 'SubmitBtn').click()
+        # browser.minimize_window(window_after)
+        # browser.switch_to.window(window_after)
+        # browser.close()
+        # browser.switch_to.window(window_befor)
 
         number = browser.find_element(By.ID, "shootnum").text
         number = number.replace("№ ", "KSP_0")
@@ -68,11 +77,13 @@ def create_shoot():
 
         system_notification(number, shoot_caption)
 
-        time.sleep(1)
-        browser.close()
-        browser.quit()
+        # time.sleep(1)
+
     except Exception as ex:
         print(ex)
+        browser.close()
+        browser.quit()
+    finally:
         browser.close()
         browser.quit()
 
