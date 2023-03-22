@@ -1,14 +1,16 @@
 """
 20220729 script for optimization keywords in KSP archiv
 """
-
+# pip install beautifulsoup4
+# pip install lxml
 from selenium.webdriver.common.by import By
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import Select
 import re
 from datetime import datetime
 import pyperclip
 from Common.authorization import autorization
+from Common.set_to_string import convert_set_to_string
 
 red = '\033[91m'
 green = '\33[32m'
@@ -29,17 +31,18 @@ def write_keywords(final):
     with open(keyword_file, 'a') as text_file:
         text_file.write('\n')
         text_file.write(datetime.now().strftime("%Y-%m-%d") + '\n')
-        text_file.write(final)
+        final_string  = convert_set_to_string(final)
+        text_file.write(final_string)
 
 
-def check_keywords_number(browser, keyword):  # take number of images from site
+def check_keywords_number(keyword):  # take number of images from site
     try:
         images_number = browser.find_element(By.CSS_SELECTOR,
                                              'body > table:nth-child(6) > tbody:nth-child(1) > '
                                              'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
                                              'tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > '
                                              'b:nth-child(1)')
-    except Exception:
+    except Exception as ex:
         print(f'{red}снимков с ключевым словом {green}{keyword}{end}{red} не найденно{end}\n'
               f'program terminated')
         exit()
@@ -58,7 +61,7 @@ def keywords_search(keyword):  # find all my images with keyword escape KP part
     select.select_by_value('100')
     browser.find_element(By.CSS_SELECTOR, '#searchbtn').click()
 
-    return check_keywords_number(browser, keyword)
+    return check_keywords_number(keyword)
 
 
 def go_my_images(link, keyword) -> object:
@@ -85,7 +88,7 @@ def get_keyword_of_image(link):
 
 def keywords_opimization(keywords):
     step_1 = re.sub(
-        r'(_гипермаркеты|_фирмы|_ПРЕДМЕТ_|'
+        r'(_РЕЛИГИЯ|_гипермаркеты|_фирмы|_ПРЕДМЕТ_|'
         r'_People|_ГОРОДА И СТРАНЫ_|'
         r'_PERSONS|_CITY|_ИМЯ СОБСТВЕННОЕ_|'
         r'COUNTRY|_РУССКИЙ_|'
@@ -102,7 +105,8 @@ def make_text_edit_link(link):
     text_edit_link = f'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID={inner_id}&CloseForm=1'
     return text_edit_link
 
-def select_action():
+
+def select_action(keyword):
     print(f"{red}keyword {green}{keyword}{end} {red}will be used{end}\n"
           f"please make a choice:\n"
           f"1 - {red}clear all keywords{end}\n"
@@ -110,7 +114,8 @@ def select_action():
     # f"3 - enter your keywords\n")
     return int(input())
 
-def display_your_choise(what_to_do):
+
+def display_your_choise(what_to_do, keyword):
     if what_to_do == 3:
         print(f'process start with keyword {green}{keyword}{end}\n')
     elif what_to_do == 2:
@@ -119,21 +124,13 @@ def display_your_choise(what_to_do):
         print('keyword will be deleted you sure?\n')
 
 
-def main():
-    keywords_collection = set()  # коллекция для сбора ключевых слов
-    keyword = chose_input()  # keyword for work
-    what_to_do = select_action()
-    display_your_choise(what_to_do)
-    keyword_link, images_number = keywords_search(keyword)
-
-    # if images_number != 0:
+def get_images_links(images_number, keyword_link, keyword, what_to_do):
+    keywords_collection = set()
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
-
     for x in range(1, range_number):  # главный цикл работы программы
         link = f'{keyword_link}2&pg={x}'
         html = go_my_images(link, keyword)  # получаю html  открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
-
         print(f'на странице {x} - {len(images_links)} снимков')
 
         for i in range(len(images_links)):  # (len(images_links)):
@@ -163,19 +160,30 @@ def main():
             except browser:
                 continue
 
-        browser.close()
-        browser.quit()
-        keywords_collection = str(keywords_collection)
-        if what_to_do > 1:
-            print(keywords_collection)
-            write_keywords(keywords_collection)
-        else:
-            print(f"{red} all keywords deleted{end}")
+    return keywords_collection
+
+
+def main():
+    # коллекция для сбора ключевых слов
+    keyword = chose_input()  # keyword for work
+    what_to_do = select_action(keyword)
+    display_your_choise(what_to_do, keyword)
+    keyword_link, images_number = keywords_search(keyword)
+    keywords_collection = get_images_links(images_number, keyword_link, keyword, what_to_do)
+
+    browser.close()
+    browser.quit()
+    # keywords_collection = str()
+    if what_to_do > 1:
+        print(keywords_collection)
+        write_keywords(keywords_collection)
+    else:
+        print(f"{red} all keywords deleted{end}")
 
 
 if __name__ == '__main__':
-    # main()
-    # browser = autorization()
+    browser = autorization()
+    main()
     # chose_input()
     # keywords_search("слон")
     #
