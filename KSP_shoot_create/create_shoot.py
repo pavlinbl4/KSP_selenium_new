@@ -10,7 +10,7 @@ from Common.notification import system_notification
 
 def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
-    shoot_caption = input("Введите описание съемки\n")
+    shoot_caption = "Наружная реклама недвижимости"   #input("Введите описание съемки\n")
     browser = autorization()
     try:
         author_input = browser.find_element(By.CSS_SELECTOR, "input#au")
@@ -60,11 +60,11 @@ def create_shoot():
         author_input.send_keys(Keys.ENTER)
         time.sleep(2)
 
-        window_before = browser.window_handles[0]
+        # window_before = browser.window_handles[0]
         browser.find_element(By.ID, 'SubmitBtn').click()
-        window_after = browser.window_handles[1]
-        browser.minimize_window()
-        browser.switch_to.window(window_before)
+        # window_after = browser.window_handles[1]
+        # browser.minimize_window()
+        # browser.switch_to.window("main")
         browser.find_element(By.ID, 'SubmitBtn').click()
         # browser.minimize_window(window_after)
         # browser.switch_to.window(window_after)
