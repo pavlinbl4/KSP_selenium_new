@@ -11,6 +11,8 @@ from datetime import datetime
 import pyperclip
 from Common.authorization import autorization
 from Common.set_to_string import convert_set_to_string
+from Keyword_optimization_REFACTORING.make_better import keywords_opimization
+from Keyword_optimization_REFACTORING.remove_wrong_keyword import remove_mistake
 
 red = '\033[91m'
 green = '\33[32m'
@@ -31,7 +33,7 @@ def write_keywords(final):
     with open(keyword_file, 'a') as text_file:
         text_file.write('\n')
         text_file.write(datetime.now().strftime("%Y-%m-%d") + '\n')
-        final_string  = convert_set_to_string(final)
+        final_string = convert_set_to_string(final)
         text_file.write(final_string)
 
 
@@ -86,20 +88,6 @@ def get_keyword_of_image(link):
     return keywords
 
 
-def keywords_opimization(keywords):
-    step_1 = re.sub(
-        r'(_РЕЛИГИЯ|_гипермаркеты|_фирмы|_ПРЕДМЕТ_|'
-        r'_People|_ГОРОДА И СТРАНЫ_|'
-        r'_PERSONS|_CITY|_ИМЯ СОБСТВЕННОЕ_|'
-        r'COUNTRY|_РУССКИЙ_|'
-        r'_ГОРОДА И СТРАНЫ|\|)',
-        ' ',
-        keywords).strip()
-    step_2 = re.sub(r'\b([^\W\d_]+)(\s+\1)+\b', r'\1', re.sub(r'\W+', ' ', step_1).strip(), flags=re.I).strip()
-    keywords = re.sub(r'\s+', ', ', step_2)
-    return keywords
-
-
 def make_text_edit_link(link):
     inner_id = re.findall(r'(?<=id=)\d+', link)[0]
     text_edit_link = f'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID={inner_id}&CloseForm=1'
@@ -117,11 +105,15 @@ def select_action(keyword):
 
 def display_your_choise(what_to_do, keyword):
     if what_to_do == 3:
-        print(f'process start with keyword {green}{keyword}{end}\n')
+        print(f'remove keyword {green}{keyword}{end}\n')
     elif what_to_do == 2:
         print('standard keyword optimization\n')
     elif what_to_do == 1:
         print('keyword will be deleted you sure?\n')
+
+def set_keywords_to_site(good_keywords):
+    browser.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
+    browser.find_element(By.NAME, 'Add').click()
 
 
 def get_images_links(images_number, keyword_link, keyword, what_to_do):
@@ -146,12 +138,12 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
                     good_keywords = keywords_opimization(keywords)  # прогоняем ключевые слова через оптимизатор
                     print(f"{green} keywords optimisation {end}")
                 elif what_to_do == 3:
-                    print("your keywords used")
-                browser.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
-                window_before = browser.window_handles[0]
-                browser.find_element(By.NAME, 'Add').click()
-                browser.switch_to.window(window_before)
-                browser.find_element(By.NAME, 'Add').click()
+                    print(f"keyword {keyword} was removed")
+                    good_keywords = remove_mistake(keyword, keywords)
+                # browser.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
+                # browser.find_element(By.NAME, 'Add').click()
+                set_keywords_to_site(good_keywords)
+
                 temp_set = set(good_keywords.split(', '))
                 keywords_collection.update(temp_set)
                 temp_set.clear()
@@ -165,8 +157,8 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
 
 def main():
     # коллекция для сбора ключевых слов
-    keyword = chose_input()  # keyword for work
-    what_to_do = select_action(keyword)
+    keyword = 'беспланый'  # chose_input()  # keyword for work
+    what_to_do = 3  # select_action(keyword)  # 2
     display_your_choise(what_to_do, keyword)
     keyword_link, images_number = keywords_search(keyword)
     keywords_collection = get_images_links(images_number, keyword_link, keyword, what_to_do)
