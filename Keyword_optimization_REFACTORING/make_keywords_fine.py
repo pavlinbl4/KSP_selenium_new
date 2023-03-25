@@ -138,17 +138,16 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
                     good_keywords = keywords_opimization(keywords)  # прогоняем ключевые слова через оптимизатор
                     print(f"{green} keywords optimisation {end}")
                 elif what_to_do == 3:
-                    print(f"keyword {keyword} was removed")
+                    print(f"{green}keyword{end}{red}{keyword}{end}{green} was removed{end}")
                     good_keywords = remove_mistake(keyword, keywords)
-                # browser.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
-                # browser.find_element(By.NAME, 'Add').click()
+
                 set_keywords_to_site(good_keywords)
 
                 temp_set = set(good_keywords.split(', '))
                 keywords_collection.update(temp_set)
                 temp_set.clear()
-                print(good_keywords)
                 print(f'{i:40}')
+                print(f"keywords for image\n{green}{good_keywords}{end}\n")
             except browser:
                 continue
 
