@@ -98,8 +98,8 @@ def select_action(keyword):
     print(f"{red}keyword {green}{keyword}{end} {red}will be used{end}\n"
           f"please make a choice:\n"
           f"1 - {red}clear all keywords{end}\n"
-          f"2 - {green}optimise keywords{end}\n")
-    # f"3 - enter your keywords\n")
+          f"2 - {green}optimise keywords{end}\n"
+          f"3 - {green}remove wrong keyword{end}\n")
     return int(input())
 
 
@@ -148,7 +148,8 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
                 temp_set.clear()
                 print(f'{i:40}')
                 print(f"keywords for image\n{green}{good_keywords}{end}\n")
-            except browser:
+            except Exception as ex:
+                print(ex)
                 continue
 
     return keywords_collection
@@ -156,8 +157,8 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
 
 def main():
     # коллекция для сбора ключевых слов
-    keyword = 'беспланый'  # chose_input()  # keyword for work
-    what_to_do = 3  # select_action(keyword)  # 2
+    keyword = chose_input()  # keyword for work
+    what_to_do = select_action(keyword)  # 2
     display_your_choise(what_to_do, keyword)
     keyword_link, images_number = keywords_search(keyword)
     keywords_collection = get_images_links(images_number, keyword_link, keyword, what_to_do)
