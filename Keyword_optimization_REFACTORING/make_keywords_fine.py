@@ -1,6 +1,8 @@
 """
 20220729 script for optimization keywords in KSP archiv
 """
+import time
+
 # pip install beautifulsoup4
 # pip install lxml
 from selenium.webdriver.common.by import By
@@ -11,6 +13,7 @@ from datetime import datetime
 import pyperclip
 from Common.authorization import autorization
 from Common.set_to_string import convert_set_to_string
+from Keyword_optimization_REFACTORING.add_some_keywords import add_new_keywords
 from Keyword_optimization_REFACTORING.make_better import keywords_opimization
 from Keyword_optimization_REFACTORING.remove_wrong_keyword import remove_mistake
 
@@ -99,24 +102,31 @@ def select_action(keyword):
           f"please make a choice:\n"
           f"1 - {red}clear all keywords{end}\n"
           f"2 - {green}optimise keywords{end}\n"
-          f"3 - {green}remove wrong keyword{end}\n")
+          f"3 - {green}remove wrong keyword{end}\n"
+          f'4 - {green}and keywords collection to images{end}\n')
     return int(input())
 
 
-def display_your_choise(what_to_do, keyword):
+def display_your_choice(what_to_do, keyword):
+    new_keywords = None
     if what_to_do == 3:
         print(f'remove keyword {green}{keyword}{end}\n')
     elif what_to_do == 2:
         print('standard keyword optimization\n')
     elif what_to_do == 1:
         print('keyword will be deleted you sure?\n')
+    elif what_to_do == 4:
+        print(f'and keywords collection to images\n ')
+        new_keywords = chose_input()
+    return new_keywords
+
 
 def set_keywords_to_site(good_keywords):
     browser.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
     browser.find_element(By.NAME, 'Add').click()
 
 
-def get_images_links(images_number, keyword_link, keyword, what_to_do):
+def get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywords):
     keywords_collection = set()
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
     for x in range(1, range_number):  # главный цикл работы программы
@@ -128,6 +138,7 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
         for i in range(len(images_links)):  # (len(images_links)):
             text_edit_link = make_text_edit_link(images_links[i].get('href'))
             browser.get(text_edit_link)
+            time.sleep(1)
             try:
                 keywords = browser.find_element(By.NAME, 'KeywordsRus').text
                 good_keywords = ""
@@ -138,8 +149,11 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
                     good_keywords = keywords_opimization(keywords)  # прогоняем ключевые слова через оптимизатор
                     print(f"{green} keywords optimisation {end}")
                 elif what_to_do == 3:
-                    print(f"{green}keyword{end}{red}{keyword}{end}{green} was removed{end}")
+                    print(f"{green}keyword {end}{red}{keyword}{end}{green} was removed{end}")
                     good_keywords = remove_mistake(keyword, keywords)
+                elif what_to_do == 4:
+                    print(f"{green}keywords added {end}{red}{keyword}{end}{green} to images{end}")
+                    add_new_keywords(new_keywords, keywords)
 
                 set_keywords_to_site(good_keywords)
 
@@ -149,6 +163,7 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do):
                 print(f'{i:40}')
                 print(f"keywords for image\n{green}{good_keywords}{end}\n")
             except Exception as ex:
+                browser.save_screenshot('problem.png')
                 print(ex)
                 continue
 
@@ -159,9 +174,9 @@ def main():
     # коллекция для сбора ключевых слов
     keyword = chose_input()  # keyword for work
     what_to_do = select_action(keyword)  # 2
-    display_your_choise(what_to_do, keyword)
+    new_keywords = display_your_choice(what_to_do, keyword)
     keyword_link, images_number = keywords_search(keyword)
-    keywords_collection = get_images_links(images_number, keyword_link, keyword, what_to_do)
+    keywords_collection = get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywords)
 
     browser.close()
     browser.quit()
