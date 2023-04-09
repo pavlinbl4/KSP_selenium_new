@@ -6,11 +6,14 @@ from selenium.webdriver.common.by import By
 import pyperclip
 from Common.authorization import autorization
 from Common.notification import system_notification
+from KSP_shoot_create.add_category import select_category
+from KSP_shoot_create.checkbox_output import create_checkbox_dict
 
 
 def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
-    shoot_caption = "Наружная реклама недвижимости"   #input("Введите описание съемки\n")
+    shoot_caption = input("Введите описание съемки\n")
+    category_number = create_checkbox_dict()
     browser = autorization()
     try:
         author_input = browser.find_element(By.CSS_SELECTOR, "input#au")
@@ -46,7 +49,6 @@ def create_shoot():
         time.sleep(1)
         customer_input.send_keys(Keys.DOWN)
         customer_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         # выбираю бильдредактора с помощью класса Select
         select = Select(browser.find_element(By.NAME, 'EditorContactID'))
@@ -54,22 +56,17 @@ def create_shoot():
 
         author_input = browser.find_element(By.ID, "AuthorContact")
         author_input.send_keys("Павленко Евгений Валентинович")
-        time.sleep(2)
+        time.sleep(1)
         author_input.send_keys(Keys.DOWN)
-        time.sleep(2)
+        time.sleep(1)
         author_input.send_keys(Keys.ENTER)
-        time.sleep(2)
+        time.sleep(1)
 
-        # window_before = browser.window_handles[0]
+        # add category
+        select_category(category_number, browser)
+
+        # confirm shoot creation
         browser.find_element(By.ID, 'SubmitBtn').click()
-        # window_after = browser.window_handles[1]
-        # browser.minimize_window()
-        # browser.switch_to.window("main")
-        browser.find_element(By.ID, 'SubmitBtn').click()
-        # browser.minimize_window(window_after)
-        # browser.switch_to.window(window_after)
-        # browser.close()
-        # browser.switch_to.window(window_befor)
 
         number = browser.find_element(By.ID, "shootnum").text
         number = number.replace("№ ", "KSP_0")
@@ -77,7 +74,7 @@ def create_shoot():
 
         system_notification(number, shoot_caption)
 
-        # time.sleep(1)
+        time.sleep(1)
 
     except Exception as ex:
         print(ex)
