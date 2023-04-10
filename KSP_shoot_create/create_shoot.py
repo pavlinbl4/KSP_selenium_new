@@ -8,11 +8,13 @@ from Common.authorization import autorization
 from Common.notification import system_notification
 from KSP_shoot_create.add_category import select_category
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
+from KSP_shoot_create.input_window import get_input_data
 
 
 def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
-    shoot_caption = input("Введите описание съемки\n")
+    # shoot_caption = input("Введите описание съемки\n")
+    shoot_caption = get_input_data()
     category_number = create_checkbox_dict()
     browser = autorization()
     try:
