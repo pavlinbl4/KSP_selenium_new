@@ -2,9 +2,9 @@ from openpyxl import load_workbook, Workbook
 import os
 
 
-def create_report_file(month_name, html_folder):
+def create_report_file(month_name, html_folder, photographer):
     report_folder = html_folder[:-5]  # f'{Path.home()}/Documents/Kommersant/My_report_from_0107'
-    report_file_name = f"report_file_{month_name}.xlsx"
+    report_file_name = f"report_file_{month_name}_{photographer}.xlsx"
     path_to_file = f'{report_folder}/{report_file_name}'
 
     if os.path.exists(path_to_file):
@@ -30,3 +30,7 @@ def create_report_file(month_name, html_folder):
 
     wb.save(path_to_file)
     return path_to_file
+
+
+if __name__ == '__main__':
+    create_report_file(month_name, html_folder)
