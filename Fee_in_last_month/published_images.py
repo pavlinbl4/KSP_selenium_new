@@ -43,14 +43,14 @@ def end_selenium():
     browser.quit()
 
 
-def autorization():  # авторизация на главной странице
+def autorization(photographer) -> object:  # авторизация на главной странице
     browser.get(first_loggin)
     login_input = browser.find_element(By.ID, "login")
     login_input.send_keys(login)
     password_input = browser.find_element(By.ID, "password")
     password_input.send_keys(password)
     browser.find_element(By.CSS_SELECTOR, ".system input.but").click()
-    browser.find_element(By.CSS_SELECTOR, '#au').send_keys('Евгений Павленко')
+    browser.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
 
 
 def select_today_published_images(check_date):
