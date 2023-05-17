@@ -20,7 +20,7 @@ from date_with_custom_month import custom_month_date
 
 
 
-def main_modul():
+def main_modul(photographer):
     month_n_int = month_number()  # int(input('input months number'))
     months_name, check_date, days_in_month, current_year = custom_month_date(month_n_int)
 
@@ -31,10 +31,10 @@ def main_modul():
     html_folder = home.add_subfolder_to_kommersant(f'FEE/{month_n_int}_{months_name}_fee/HTML')
     os.makedirs(html_folder, exist_ok=True)
 
-    path_to_file = create_report_file(months_name, html_folder)
+    path_to_file = create_report_file(months_name, html_folder, photographer)
 
     # 2.2  авторизируюсь на сайте
-    autorization()
+    autorization(photographer)
 
     # 3 на данном этапе сохраню все страницы для последующего анализа
     for day in range(1, days_in_month + 1):
@@ -59,4 +59,8 @@ def main_modul():
 
 
 if __name__ == '__main__':
-    main_modul()
+    # main_modul(photographer='Евгений Павленко')
+    # main_modul(photographer='Александр Петросян')
+    # main_modul(photographer='Александр Коряков')
+    # main_modul(photographer='Александр Казаков')
+    main_modul(photographer='Дмитрий Духанин')  # error  File "/Volumes/big4photo/_PYTHON/KSP_selenium_new/Fee_in_last_month/images_vocabulary.py", line 9
