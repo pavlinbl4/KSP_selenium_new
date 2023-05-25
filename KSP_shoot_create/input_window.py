@@ -25,10 +25,11 @@ def get_input_data():
 
     # Create an entry field for the input data
     # input_text = tk.StringVar()
-    input_text = tk.Entry(input_window, width=50)
-    input_field = Text(wrap=WORD, font=("Arial",20), background="#abdbe3")     #  #abdbe3     #f4dca8
+    tk.Entry(input_window, width=50)
+    input_field = Text(wrap=WORD, font=("Arial",20), background="#abdbe3")   #  #abdbe3     #f4dca8
     input_field.pack(padx=50, pady=50)
     input_field.place(x=10, y=30, width=380, height=130)
+
 
     # Create a button to submit the data
     submit_button = tk.Button(input_window, text="Submit", command=input_window.quit, height=1, width=10)
@@ -39,7 +40,6 @@ def get_input_data():
     input_window.mainloop()
 
     # Get the entered data from the input field
-    # input_data = input_text.get()
     input_text = input_field.get("1.0",'end-1c')
 
     # Destroy the window after it has been submitted
