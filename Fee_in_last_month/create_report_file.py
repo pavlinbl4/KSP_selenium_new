@@ -4,6 +4,7 @@ import os
 
 def create_report_file(month_name, html_folder, photographer):
     report_folder = html_folder[:-5]  # f'{Path.home()}/Documents/Kommersant/My_report_from_0107'
+    # report_file_name = f"report_file_{month_name}_{photographer}.xlsx"
     report_file_name = f"report_file_{month_name}_{photographer}.xlsx"
     path_to_file = f'{report_folder}/{report_file_name}'
 
