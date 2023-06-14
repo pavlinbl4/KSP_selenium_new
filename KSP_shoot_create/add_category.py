@@ -24,12 +24,13 @@ def select_category(category_number, browser):
     category.select_by_value(category_number)
     browser.find_element(By.XPATH, '//*[@id="addrow"]').click()
     browser.find_element(By.XPATH, '//*[@id="DivSubmit"]/input[1]').click()
+    return browser
 
 
 def add_category_to_shoot():
     category_number = create_checkbox_dict()
-    browser = autorization()
-    browser = open_shoot_creation_page(browser)
+    # browser = autorization()  # this only for test
+    # browser = open_shoot_creation_page(browser)   # this only for test
     select_category(category_number, browser)
 
 
