@@ -98,27 +98,4 @@ def main():
 if __name__ == '__main__':
     assert type(make_html_link('KSP_017605', 0)) == str
     main()
-    # shoot_id = chose_input()  # shoot_id = 'KSP_017892'
-    # page_link = make_html_link(shoot_id, page=0)
-    # browser = autorization()
-    # html = page_html(browser, page_link)
-    # total_images = get_total_images()  # number of images in shoot
-    # print(total_images)
-    #
-    # count = 1
-    # if total_images <= 200:  # если количество снимков меньше 200 ( количество снимков на странице
-    #     number_of_downloads = total_images  # количество скачиваний на странице с 200 картинками будет такое
-    #     page = 1  # номер страницы с которой выкачиваю фото
-    #     download_one_page(number_of_downloads, shoot_id, page_link, count, browser)
-    #     # browser.close()
-    #     browser.quit()
-    #
-    # else:  # если больше 200 снимков то нужно будет открывать новые страницы
-    #     pages_number = total_images // 200
-    #     for page in range(1, pages_number + 2):
-    #         if page != pages_number + 1:
-    #             number_of_downloads = 200
-    #         else:
-    #             number_of_downloads = total_images % 200
-    #         download_one_page(number_of_downloads, shoot_id, page, count, browser)
-    # print(f"скачивание завершено")
+
