@@ -5,7 +5,7 @@ from shoot_history.find_file_hdd import find_no_ext
 from change_color_class import change_color_class_dng, change_color_class_raw
 from colorama import Fore
 from lost_files_to_csv import write_lost_files_info
-from tkinter import filedialog, messagebox
+from tkinter import filedialog
 
 
 def check_original_file_name(original_file_name,
