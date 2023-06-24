@@ -6,7 +6,7 @@ from autorization import end_selenium, open_page, work_to_history
 from make_page_link import make_page_link
 from _scrap_html import scrap_html, select_folder
 
-path_to_file = '/Volumes/big4photo/Documents/Kommersant/shoot_rename/shoot_story.xlsx'
+path_to_file = '/Users/evgeniy/Documents/Kommersant/shoot_rename/shoot_story.xlsx'
 
 shoot_id = chose_input()
 
