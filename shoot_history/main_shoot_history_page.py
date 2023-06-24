@@ -10,8 +10,8 @@ path_to_file = '/Users/evgeniy/Documents/Kommersant/shoot_rename/shoot_story.xls
 
 shoot_id = chose_input()
 
-path = select_folder()
-
+# path = select_folder()
+path = '/Users/evgeniy/Pictures'
 browser = autorization()
 
 page_link = make_page_link(shoot_id)
