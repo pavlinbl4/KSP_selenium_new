@@ -1,8 +1,6 @@
 from bs4 import BeautifulSoup
-from get_file_extension import get_file_extension
 from shoot_history.change_color_class_dng import change_color_class
 from shoot_history.find_file_hdd import find_no_ext
-from change_color_class import change_color_class_dng, change_color_class_raw
 from colorama import Fore
 from lost_files_to_csv import write_lost_files_info
 from tkinter import filedialog
