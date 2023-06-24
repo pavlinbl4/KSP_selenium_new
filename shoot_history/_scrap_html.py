@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from get_file_extension import get_file_extension
+from shoot_history.change_color_class_dng import change_color_class
 from shoot_history.find_file_hdd import find_no_ext
 from change_color_class import change_color_class_dng, change_color_class_raw
 from colorama import Fore
@@ -36,13 +37,14 @@ def scrap_html(page_link, path):
             file_renames[photo_id].append("ADDED")
             way_to_file = find_no_ext(original_file_name, path)  # function to find file on HDD
             if len(way_to_file) > 0:  # if file wasn't found
-                extension = get_file_extension(way_to_file[0])  # originl_file_extension
-                if extension in ['DNG', 'dng', 'JPG', 'jpg', 'JPEG',
-                                 'jpeg']:  # в зависимости от типа файла выбирать метод редактирования IPTC
-                    change_color_class_dng(way_to_file[0], photo_id)  # function to change IPTC data
-                else:
-                    change_color_class_raw(way_to_file[0],
-                                           photo_id)  # function to change IPTC data
+                change_color_class(way_to_file[0], photo_id, color='Red')
+                # extension = get_file_extension(way_to_file[0])  # originl_file_extension
+                # if extension in ['DNG', 'dng', 'JPG', 'jpg', 'JPEG',
+                #                  'jpeg']:  # в зависимости от типа файла выбирать метод редактирования IPTC
+                #     change_color_class_dng(way_to_file[0], photo_id)  # function to change IPTC data
+                # else:
+                #     change_color_class_raw(way_to_file[0],
+                #                            photo_id)  # function to change IPTC data
 
             else:
 
