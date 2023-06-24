@@ -12,5 +12,5 @@ def change_color_class(file, image_title, color):
         )
 
 if __name__ == '__main__':
-    file = '/Volumes/big4photo/python_test_images/20151102__PAV5906.nef'
-    change_color_class(file, 'image_title', color='Red"')
+    file = '/Users/evgeniy/Pictures/2023/20230613_Брега - мегалит/20230613EPAV7980.DNG'
+    change_color_class(file, 'image_title', color='Blue')
