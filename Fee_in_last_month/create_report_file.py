@@ -1,36 +1,44 @@
 from openpyxl import load_workbook, Workbook
 import os
+from pathlib import Path
+from typing import Optional
 
 
-def create_report_file(month_name, html_folder, photographer):
-    report_folder = html_folder[:-5]  # f'{Path.home()}/Documents/Kommersant/My_report_from_0107'
-    report_file_name = f"report_file_{month_name}_{photographer}.xlsx"
-    path_to_file = f'{report_folder}/{report_file_name}'
+def create_report_file(month_name: str, html_folder: str, photographer: Optional[str] = None):
+    report_folder = Path(html_folder).parent
+    path_to_file = report_folder / f"report_file_{month_name}_{photographer}.xlsx"
+
+    def set_column_widths():
+        ws.column_dimensions['A'].width = 5
+        ws.column_dimensions['B'].width = 25
+        ws.column_dimensions['C'].width = 25  # задаю ширину колонки
+        ws.column_dimensions['D'].width = 50
+        ws.column_dimensions['E'].width = 100
 
     if os.path.exists(path_to_file):
-        wb = load_workbook(path_to_file)  # файл есть и открываю его
-        ws = wb.active
-        # ws = wb.create_sheet(report_date)  # добавляю новую таблицу
+        wb = load_workbook(filename=path_to_file, read_only=False)
+        ws = wb.create_sheet(month_name)
     else:
         wb = Workbook()  # если файла еще нет
         ws = wb.active  # если файла еще нет
         ws.title = month_name  # если файла еще нет
 
-    ws.column_dimensions['A'].width = 5
-    ws.column_dimensions['B'].width = 25
-    ws.column_dimensions['C'].width = 25  # задаю ширину колонки
-    ws.column_dimensions['D'].width = 50
-    ws.column_dimensions['E'].width = 100
+    set_column_widths()
 
-    ws['A1'] = 'number'
-    ws['B1'] = 'KSP_id'  # create columns names
-    ws['C1'] = 'date of publication'
-    ws['D1'] = 'publication'
-    ws['E1'] = 'material'
+    headers = {
+        'A1': 'number',
+        'B1': 'KSP_id',
+        'C1': 'date of publication',
+        'D1': 'publication',
+        'E1': 'material',
+    }
+
+    for cell, value in headers.items():
+        ws[cell] = value
 
     wb.save(path_to_file)
     return path_to_file
 
 
 if __name__ == '__main__':
-    create_report_file(month_name, html_folder)
+    create_report_file('May', '/Volumes/big4photo/Documents/Kommersant/FEE/7_July_fee/HTML', 'Pupkin')
