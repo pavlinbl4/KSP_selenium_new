@@ -8,19 +8,16 @@ from Fee_in_last_month.what_month import month_number
 from published_images import autorization, end_selenium, select_today_published_images
 from check_published_images import one_day_images_cycle
 from images_links import get_image_links
-from images_vocabulary import make_images_voc
+from images_vocabulary import make_image_dict
 import re
 import os
 from create_report_file import create_report_file
 from datetime import datetime
 from date_with_custom_month import custom_month_date
+import time
 
 
-
-
-
-
-def main_modul(photographer):
+def main_modul(photographer:str):
     month_n_int = month_number()  # int(input('input months number'))
     months_name, check_date, days_in_month, current_year = custom_month_date(month_n_int)
 
@@ -40,6 +37,7 @@ def main_modul(photographer):
     for day in range(1, days_in_month + 1):
         check_date = datetime(current_year, month_n_int, day).strftime("%d.%m.%Y")
         html = select_today_published_images(check_date)
+        time.sleep(1)
         with open(f'{html_folder}/source_page_{check_date}.html', 'w') as file:
             file.write(html)
 
@@ -50,17 +48,25 @@ def main_modul(photographer):
         with open(f'{html_folder}/{i}', 'r') as file:
             html = file.read()
         images_links = get_image_links(html)  # список ссылок на "засланные" снимки в течении одного дня
-        images_voc = make_images_voc(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешнего id
+        images_voc = make_image_dict(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешнего id
         count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', i)[0], path_to_file, count)
         print(f'{i} - {count = }')
 
     end_selenium()
-    delete_folder(html_folder)   # delete folder with html files
+    delete_folder(html_folder)  # delete folder with html files
 
 
 if __name__ == '__main__':
-    # main_modul(photographer='Евгений Павленко')
+    main_modul(photographer='Евгений Павленко')
     # main_modul(photographer='Александр Петросян')
     # main_modul(photographer='Александр Коряков')
     # main_modul(photographer='Александр Казаков')
-    main_modul(photographer='Дмитрий Духанин')  # error  File "/Volumes/big4photo/_PYTHON/KSP_selenium_new/Fee_in_last_month/images_vocabulary.py", line 9
+    # main_modul(photographer='Дмитрий Духанин')
+    # main_modul(photographer='Дмитрий Азаров')
+    # main_modul(photographer='Александр Миридонов')
+    # main_modul(photographer='Роман Яровицын')
+    # main_modul(photographer='Юрий Стрелец')
+    # main_modul(photographer='Анатолий Жданов')
+    # main_modul(photographer='Глеб Щелкунов')
+    # main_modul(photographer='Дмитрий Лебедев')
+    # main_modul(photographer='Алексей Смагин')
