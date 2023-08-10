@@ -6,7 +6,7 @@ from typing import Optional
 
 def create_report_file(month_name: str, html_folder: str, photographer: Optional[str] = None):
     report_folder = Path(html_folder).parent
-    path_to_file = report_folder / f"report_file_{month_name}_{photographer}.xlsx"
+    path_to_file = report_folder / f"report_file_{month_name}.xlsx"
 
     def set_column_widths():
         ws.column_dimensions['A'].width = 5
@@ -17,7 +17,7 @@ def create_report_file(month_name: str, html_folder: str, photographer: Optional
 
     if os.path.exists(path_to_file):
         wb = load_workbook(filename=path_to_file, read_only=False)
-        ws = wb.create_sheet(month_name)
+        ws = wb.create_sheet(photographer)
     else:
         wb = Workbook()  # если файла еще нет
         ws = wb.active  # если файла еще нет
