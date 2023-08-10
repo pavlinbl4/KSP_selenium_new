@@ -5,6 +5,8 @@ from selenium import webdriver
 from selenium.webdriver.common.alert import Alert
 from dotenv import load_dotenv
 import os
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from Common.crome_options import setting_chrome_options
 from scrap_publication_list import image_publications_voc
@@ -76,6 +78,10 @@ def select_today_published_images(check_date:str):
         data_input.send_keys(check_date)
 
         browser.find_element(By.CSS_SELECTOR, '#searchbtn').click()
+
+        WebDriverWait(browser, 10).until(
+            EC.text_to_be_present_in_element(By.TAG_NAME, 'body')
+        )
 
         try:
             alert = Alert(browser)
