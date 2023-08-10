@@ -83,8 +83,8 @@ def select_today_published_images(check_date:str):
             time.sleep(2)
         finally:
 
-            # return browser.page_source
-            return browser.get_page_source()
+            return browser.page_source
+
 
 def published_for_all_time(k):  # функция находит все опубликованные снимки из 'засыла' без фильтрации по датам
     report_link = f'{report_web_link}{k}#web'
