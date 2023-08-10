@@ -1,12 +1,29 @@
+import os
+import logging
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
 
-def create_file_if_no(path_to_folder, file_name):
-    Path(f'{path_to_folder}/{file_name}').touch(exist_ok=True)
-    return f'{path_to_folder}/{file_name}'
+
+def create_file_if_not_exists(folder_path, file_name):
+    # Validate inputs
+    if not os.path.isdir(folder_path):
+        raise ValueError(f"{folder_path} is not a valid folder")
+
+    file_path = os.path.join(folder_path, file_name)
+
+    # Create file if doesn't exist
+    if not os.path.exists(file_path):
+        logger.info("Creating file %s", file_path)
+        with open(file_path, 'w') as f:
+            pass
+
+    return file_path
 
 
 if __name__ == '__main__':
-    path_to_folder = f'{Path().home()}/Documents/keywords'
+    folder_path = Path.home() / 'Documents' / 'keywords'
     file_name = 'bad_words.txt'
-    print(create_file_if_no(file_name, path_to_folder))
+
+    created_file = create_file_if_not_exists(folder_path, file_name)
+    print(created_file)
