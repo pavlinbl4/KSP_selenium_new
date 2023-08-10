@@ -43,7 +43,7 @@ def end_selenium():
     browser.quit()
 
 
-def autorization(photographer) -> object:  # авторизация на главной странице
+def autorization(photographer):  # авторизация на главной странице
     browser.get(first_loggin)
     login_input = browser.find_element(By.ID, "login")
     login_input.send_keys(login)
@@ -53,8 +53,7 @@ def autorization(photographer) -> object:  # авторизация на гла�
     browser.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
 
 
-def select_today_published_images(check_date):
-    # autorization()
+def select_today_published_images(check_date:str):
     time.sleep(1)
 
     try:
@@ -84,8 +83,8 @@ def select_today_published_images(check_date):
             time.sleep(2)
         finally:
 
-            return browser.page_source
-
+            # return browser.page_source
+            return browser.get_page_source()
 
 def published_for_all_time(k):  # функция находит все опубликованные снимки из 'засыла' без фильтрации по датам
     report_link = f'{report_web_link}{k}#web'
@@ -103,3 +102,7 @@ def publication_info(k, count, check_date):
 
 
 browser = webdriver.Chrome(options=setting_chrome_options())
+
+
+if __name__ == '__main__':
+    select_today_published_images('01.07.2023')
