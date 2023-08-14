@@ -5,7 +5,7 @@
 from Fee_in_last_month.remove_folder import delete_folder
 from Fee_in_last_month.user_home_folder import home
 from Fee_in_last_month.what_month import month_number
-from published_images import autorization, end_selenium, select_today_published_images
+from published_images import autorization, end_selenium, select_today_published_images, change_photographer
 from check_published_images import one_day_images_cycle
 from images_links import get_image_links
 from images_vocabulary import make_image_dict
@@ -17,8 +17,7 @@ from date_with_custom_month import custom_month_date
 import time
 
 
-def main_modul(photographer:str):
-    month_n_int = month_number()  # int(input('input months number'))
+def main_modul(photographer: str, month_n_int: int):
     months_name, check_date, days_in_month, current_year = custom_month_date(month_n_int)
 
     # 2. нужно пройтись по всем дням месяца и получить данные о "засланных" снимках
@@ -31,7 +30,7 @@ def main_modul(photographer:str):
     path_to_file = create_report_file(months_name, html_folder, photographer)
 
     # 2.2  авторизируюсь на сайте
-    autorization(photographer)
+    change_photographer(photographer)
 
     # 3 на данном этапе сохраню все страницы для последующего анализа
     for day in range(1, days_in_month + 1):
@@ -49,24 +48,41 @@ def main_modul(photographer:str):
             html = file.read()
         images_links = get_image_links(html)  # список ссылок на "засланные" снимки в течении одного дня
         images_voc = make_image_dict(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешнего id
-        count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', i)[0], path_to_file, count)
+        count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', i)[0], path_to_file, count,
+                                     photographer)
         print(f'{i} - {count = }')
 
-    end_selenium()
     delete_folder(html_folder)  # delete folder with html files
 
 
 if __name__ == '__main__':
-    main_modul(photographer='Евгений Павленко')
-    # main_modul(photographer='Александр Петросян')
-    # main_modul(photographer='Александр Коряков')
-    # main_modul(photographer='Александр Казаков')
-    # main_modul(photographer='Дмитрий Духанин')
-    # main_modul(photographer='Дмитрий Азаров')
-    # main_modul(photographer='Александр Миридонов')
-    # main_modul(photographer='Роман Яровицын')
-    # main_modul(photographer='Юрий Стрелец')
-    # main_modul(photographer='Анатолий Жданов')
-    # main_modul(photographer='Глеб Щелкунов')
-    # main_modul(photographer='Дмитрий Лебедев')
-    # main_modul(photographer='Алексей Смагин')
+    month_n_int = month_number()  # int(input('input months number'))
+    autorization('Евгений Павленко')
+
+    # camera_men = [
+    #     'Евгений Павленко',
+    #     'Марина Мамонтова',
+    #     'Игорь Евдокимов',
+    #     'Александр Чиженок',
+    #     'Майя Жинкина',
+    #     'Александр Петросян',
+    #     'Александр Коряков',
+    #     'Александр Казаков',
+    #     'Дмитрий Духанин',
+    #     'Алексей Смагин',
+    #     'Глеб Щелкунов',
+    #     'Роман Яровицын',
+    #     'Александр Миридонов',
+    #     'Анатолий Жданов',
+    #     'Юрий Стрелец',
+    #     'Дмитрий Лебедев',
+    # ]
+    camera_men = [
+        'Евгений Павленко',
+        'Александр Коряков',
+    ]
+
+    for photic in camera_men:
+        print(f"{photic = }")
+        main_modul(photographer=photic, month_n_int=month_n_int)
+    end_selenium()
