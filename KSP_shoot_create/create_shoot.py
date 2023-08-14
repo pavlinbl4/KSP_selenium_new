@@ -14,25 +14,18 @@ from KSP_shoot_create.input_window import get_input_data
 def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
     # shoot_caption = input("Введите описание съемки\n")
-    shoot_caption = get_input_data()  # add caption via GUI
-    category_number = create_checkbox_dict()   # select category from GUI
+    shoot_caption = get_input_data()
+    category_number = create_checkbox_dict()
     browser = autorization()
     try:
-        author_input = browser.find_element(By.CSS_SELECTOR, "input#au")
-        author_input.send_keys("Евгений Павленко")
-
+        # author_input = browser.find_element(By.CSS_SELECTOR, "input#au")
+        # author_input.send_keys("Евгений Павленко")
+        # переход в режим описания съемки
         browser.find_element(By.CSS_SELECTOR,
                              "body > table.logotbl > tbody > tr:nth-child(3)"
                              " > td > table > tbody > tr > td:nth-child(2) > a").click()
         browser.find_element(By.ID,
                              "nav_shoots_change").click()
-
-        original_window = browser.current_window_handle
-
-        # add category
-        select_category(category_number, browser)
-
-        browser.switch_to.window(original_window)  # focus in the main window after closing category window
 
         # добавляю описание съемки
         caption_input = browser.find_element(By.ID, "ShootDescription")
@@ -71,10 +64,11 @@ def create_shoot():
         author_input.send_keys(Keys.ENTER)
         time.sleep(1)
 
+        # add category
+        select_category(category_number, browser)
+
         # confirm shoot creation
-
-        browser.find_element(By.ID, 'SubmitBtn').click()
-
+        # browser.find_element(By.ID, 'SubmitBtn').click()
 
         number = browser.find_element(By.ID, "shootnum").text
         number = number.replace("№ ", "KSP_0")
@@ -82,18 +76,15 @@ def create_shoot():
 
         system_notification(number, shoot_caption)
 
-        browser.close()
-        browser.quit()
-
         time.sleep(1)
 
     except Exception as ex:
         print(ex)
         browser.close()
         browser.quit()
-    # finally:
-    #     browser.close()
-    #     browser.quit()
+    finally:
+        browser.close()
+        browser.quit()
 
 
 if __name__ == '__main__':
