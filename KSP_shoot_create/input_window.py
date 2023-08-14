@@ -3,6 +3,10 @@ from tkinter import Text, WORD
 
 
 def get_input_data():
+    # function inserts the clipboard content into the Text widget:
+    def paste(event):
+        input_field.insert('insert', input_window.clipboard_get())
+
     # Create a new Tkinter window
     input_window = tk.Tk()
 
@@ -39,6 +43,8 @@ def get_input_data():
     # Start the main event loop for the window
     input_window.mainloop()
 
+    input_text = input_field.bind('<Control-v>', paste)
+
     # Get the entered data from the input field
     input_text = input_field.get("1.0",'end-1c')
 
@@ -54,5 +60,4 @@ if __name__ == '__main__':
     print(get_input_data())
 
 
-# data = get_input_data()
-# print("The entered data was:", data)
+
