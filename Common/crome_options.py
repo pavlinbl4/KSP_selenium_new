@@ -6,7 +6,7 @@ import time
 def setting_chrome_options():
     chrome_options = Options()
     chrome_options.add_experimental_option('detach', True)
-    chrome_options.add_argument("--headless")  # фоновый режим
+    # chrome_options.add_argument("--headless")  # фоновый режим
     # chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # невидимость автоматизации
     chrome_options.add_argument(
@@ -16,10 +16,10 @@ def setting_chrome_options():
 
 if __name__ == '__main__':
     try:
-        browser = webdriver.Chrome(options=setting_chrome_options())
-        browser.get('https://chromedriver.chromium.org/')
+        driver = webdriver.Chrome(options=setting_chrome_options())
+        driver.get('https://chromedriver.chromium.org/')
         time.sleep(5)
-        browser.close()
-        browser.quit()
+        driver.close()
+        driver.quit()
     except Exception as e:
         print(e)
