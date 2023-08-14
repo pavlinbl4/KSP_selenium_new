@@ -17,15 +17,15 @@ def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
 
     shoot_caption = get_input_data()  # add caption via GUI
-    category_number = create_checkbox_dict()   # select category from GUI
+    category_number = create_checkbox_dict()  # select category from GUI
     driver = autorization()
     try:
 
         driver.find_element(By.CSS_SELECTOR,
-                             "body > table.logotbl > tbody > tr:nth-child(3)"
-                             " > td > table > tbody > tr > td:nth-child(2) > a").click()
+                            "body > table.logotbl > tbody > tr:nth-child(3)"
+                            " > td > table > tbody > tr > td:nth-child(2) > a").click()
         driver.find_element(By.ID,
-                             "nav_shoots_change").click()
+                            "nav_shoots_change").click()
 
         original_window = driver.current_window_handle
 
@@ -58,10 +58,8 @@ def create_shoot():
         customer_input.send_keys("Павленко Евгений Валентинович")
 
         time.sleep(1)
-        # WebDriverWait(driver, 1).until(EC.element_to_be_clickable((By.ID, "CustomerContact")))
         customer_input.send_keys(Keys.DOWN)
         customer_input.send_keys(Keys.ENTER)
-        # WebDriverWait(driver, 1).until(EC.staleness_of(customer_input))
 
         # выбираю бильдредактора с помощью класса Select
         select = Select(driver.find_element(By.NAME, 'EditorContactID'))
@@ -76,8 +74,7 @@ def create_shoot():
         time.sleep(1)
 
         # confirm shoot creation
-        # driver.find_element(By.ID, 'SubmitBtn').click()
-
+        driver.find_element(By.ID, 'SubmitBtn').click()
 
         number = driver.find_element(By.ID, "shootnum").text
         number = number.replace("№ ", "KSP_0")
@@ -94,9 +91,6 @@ def create_shoot():
         print(ex)
         driver.close()
         driver.quit()
-    # finally:
-    #     driver.close()
-    #     driver.quit()
 
 
 if __name__ == '__main__':
