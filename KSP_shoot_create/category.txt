@@ -1,0 +1,16 @@
+<option value="1000000">Культура</option>
+<option value="2000000">Правосудие</option>
+<option value="3000000">Происшествия и конфликты</option>
+<option value="4000000">Экономика и бизнес</option>
+<option value="5000000">Образование</option>
+<option value="6000000">Экология</option>
+<option value="7000000">Медицина</option>
+<option value="8000000">Светская жизнь</option>
+<option value="10000000">Досуг, туризм и отдых</option>
+<option value="11000000">Политика</option>
+<option value="12000000">Религия</option>
+<option value="13000000">Наука</option>
+<option value="14000000">Общество</option>
+<option value="15000000">Спорт</option>
+<option value="16000000">Армия и ВПК</option>
+<option value="18000000">Окружающая среда</option>

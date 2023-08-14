@@ -1,0 +1,1 @@
+link = 'https://image.kommersant.ru/photo/archive/search.asp?L=1&text=&dest=0&code=&CodeSelector=&searchbtn=%D0%BF%D0%BE%D0%B8%D1%81%D0%BA&dt=3&since=31.07.2023&till=31.07.2023&lang=1&lib=1&lib=7&lib=10&lib=11&where=&au=%D0%95%D0%B2%D0%B3%D0%B5%D0%BD%D0%B8%D0%B9+%D0%9F%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BA%D0%BE&psn=&psnid=0&ps=50&subj=0&ori=0&ex=y&so=1'

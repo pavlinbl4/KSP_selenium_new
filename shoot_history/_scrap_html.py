@@ -5,8 +5,6 @@ from colorama import Fore
 from lost_files_to_csv import write_lost_files_info
 from tkinter import filedialog
 
-from shoot_history.get_file_extension import get_file_extension
-
 
 def check_original_file_name(original_file_name,
                              my_date_format):  # проверяю был ли файл переименован по моим правилам или отправлен сразу с камеры
@@ -37,10 +35,11 @@ def scrap_html(page_link, path):
             file_renames[photo_id].append("ADDED")
             way_to_file = find_no_ext(original_file_name, path)  # function to find file on HDD
             if len(way_to_file) > 0:  # if file wasn't found
-                extension = get_file_extension(way_to_file[0])  # originl_file_extension
-                if extension in ['DNG', 'dng', 'JPG', 'jpg', 'JPEG',
-                                 'jpeg', 'ORF', 'orf']:  # only image file
-                    change_color_class(way_to_file[0], photo_id, color='Red')  # function to change IPTC data
+                change_color_class(way_to_file[0], photo_id, color='Red')
+                # extension = get_file_extension(way_to_file[0])  # originl_file_extension
+                # if extension in ['DNG', 'dng', 'JPG', 'jpg', 'JPEG',
+                #                  'jpeg']:  # в зависимости от типа файла выбирать метод редактирования IPTC
+                #     change_color_class_dng(way_to_file[0], photo_id)  # function to change IPTC data
                 # else:
                 #     change_color_class_raw(way_to_file[0],
                 #                            photo_id)  # function to change IPTC data
