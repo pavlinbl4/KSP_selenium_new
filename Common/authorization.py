@@ -5,15 +5,15 @@ from Common.credentials import get_credentials
 
 
 def autorization():
-    browser = webdriver.Chrome(options=setting_chrome_options())
+    driver = webdriver.Chrome(options=setting_chrome_options())
     login, password, first_loggin = get_credentials()
-    browser.get(first_loggin)
-    login_input = browser.find_element(By.ID, "login")
+    driver.get(first_loggin)
+    login_input = driver.find_element(By.ID, "login")
     login_input.send_keys(login)
-    password_input = browser.find_element(By.ID, "password")
+    password_input = driver.find_element(By.ID, "password")
     password_input.send_keys(password)
-    browser.find_element(By.NAME, "loginbtn").click()
-    return browser
+    driver.find_element(By.NAME, "loginbtn").click()
+    return driver
 
 if __name__ == '__main__':
     autorization()
