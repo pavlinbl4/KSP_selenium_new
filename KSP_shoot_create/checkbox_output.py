@@ -12,9 +12,9 @@ def create_checkbox_dict():
     words = [k for k in category_dict.keys()]
 
     def submit():
-        for i, word in enumerate(words):
+        for i, kword in enumerate(words):
             if checkboxes[i].get() == 1:
-                selected_words.append(word)
+                selected_words.append(kword)
         window.destroy()
 
     h = 30 * (len(words) + 5)
