@@ -1,14 +1,19 @@
 from selenium.webdriver.common.by import By
 import time
 
+from Common.regex_tools import make_text_edit_link
 from Common.soup_tools import get_image_links
 
 red = '\033[91m'
 green = '\33[32m'
 end = '\033[0m'
 
+def end_selenium(driver):
+    driver.close()
+    driver.quit()
 
-def go_my_images(link, driver) -> object:
+
+def go_my_images(link, keyword, driver) -> object:
     driver.get(link)
     html = driver.page_source
     return html
@@ -34,16 +39,25 @@ def check_keywords_number(keyword, driver):  # take number of images from site
 
 def images_rotator(images_number, keyword_link, driver):
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
-    for x in range(1, range_number=2):  # главный цикл работы программы
+    # for x in range(1, range_number):  # главный цикл работы программы
+    for x in range(1, 3):  # главный цикл работы программы
         link = f'{keyword_link}2&pg={x}'
-        html = go_my_images(link)  # получаю html  открытой страницы
+        html = go_my_images(link, keyword='', driver=driver)  # получаю html  открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
         print(f'на странице {x} - {len(images_links)} снимков')
 
         for i in range(len(images_links)):  # (len(images_links)):
-            text_edit_link = make_text_edit_link(images_links[i].get('href'))
+            text_edit_link, image_id, inner_id = make_text_edit_link(images_links[i].get('href')) # generate edit image link
             driver.get(text_edit_link)
             time.sleep(1)
 
-            keywords = driver.find_element(By.NAME, 'KeywordsRus').text
+            # start here function that would grab important information from edit image page
+
+
+            # Access denied. - use try/exept
+            keywords = driver.find_element(By.NAME, 'KeywordsRus').text  # copy keywords from field
             print(keywords)
+
+
+
+
