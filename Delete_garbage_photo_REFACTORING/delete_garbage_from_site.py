@@ -7,6 +7,7 @@ import re
 from Common.authorization import autorization
 from Common.create_XLXS_report_file import create_report
 from Common.soup import get_soup
+from Common.soup_tools import get_image_links
 from Common.write_to_xlsx import write_to_xlsx
 from KSP_shoot_create.find_images import find_images_by_id
 from KSP_shoot_create.get_html import get_html_from_link
@@ -15,11 +16,11 @@ from selenium.common.exceptions import NoSuchElementException, NoSuchWindowExcep
 from Common.choose_input import chose_input
 
 
-def get_image_links(html):
-    soup = get_soup(html)
-    table = soup.find_all('table')[9]
-    tbody = table.find('tbody')
-    return tbody.find_all(title="Добавить кадрировку")  # images_links
+# def get_image_links(html):
+#     soup = get_soup(html)
+#     table = soup.find_all('table')[9]
+#     tbody = table.find('tbody')
+#     return tbody.find_all(title="Добавить кадрировку")  # images_links
 
 
 def make_text_edit_link(link):
