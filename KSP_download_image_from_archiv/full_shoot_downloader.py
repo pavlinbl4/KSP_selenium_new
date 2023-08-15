@@ -1,3 +1,5 @@
+"""This script download all images from fresh KP shoot"""
+
 from dotenv import load_dotenv
 import os
 from bs4 import BeautifulSoup
@@ -32,24 +34,13 @@ def download_one_page(number_of_downloads, shoot_id, page_link, count, browser):
             try:
                 browser.find_element(By.CSS_SELECTOR,
                                      "div.hi-subpanel:nth-child(3) > a:nth-child(4)").click()
-<<<<<<< HEAD
-            except Exception as ex:
-                browser.find_element(By.CSS_SELECTOR,
-                                     "#AddPhotoImageControl1 > div.hi-panel > div > a").click()
-                print(ex)
-=======
             except:
                 browser.find_element(By.CSS_SELECTOR,
                                      "#AddPhotoImageControl1 > div.hi-panel > div > a").click()
->>>>>>> origin/master
             print(f'{cgreen}image {f"KSP_0{shoot_id}_{index}"} downloaded{cend}')
 
             browser.close()
         except Exception as ex:
-<<<<<<< HEAD
-            print(ex)
-=======
->>>>>>> origin/master
             print(f'image {cred}{f"KSP_0{shoot_id}_{index}"}{cend} not aviable')
 
 
@@ -61,12 +52,8 @@ def page_html(browser, page_link: str):
 def get_total_images(html):
     soup = BeautifulSoup(html, 'lxml')
     total_images = soup.find('span', id='ctl00_MainContent_AllPhoto1').text
-<<<<<<< HEAD
-    return int(re.findall(r'\d+', total_images)[0])  # количество файлов в съемке
-=======
     total_images = int(re.findall(r'\d+', total_images)[0])  # количество файлов в съемке
     return total_images
->>>>>>> origin/master
 
 
 def get_login_password():
@@ -83,12 +70,8 @@ def make_html_link(shoot_id: str, page: int) -> str:
            f'&sourcecode={splited_soot_id[0]}&pagesize=200&previewsize=128&page={str(page)}&nl=true&ord=F'
 
 
-<<<<<<< HEAD
-def main():
-=======
 if __name__ == '__main__':
     assert type(make_html_link('KSP_017605', 0)) == str
->>>>>>> origin/master
     shoot_id = chose_input()  # shoot_id = 'KSP_017892'
     page_link = make_html_link(shoot_id, page=0)
     browser = autorization()
@@ -99,10 +82,7 @@ if __name__ == '__main__':
     count = 1
     if total_images <= 200:  # если количество снимков меньше 200 ( количество снимков на странице
         number_of_downloads = total_images  # количество скачиваний на странице с 200 картинками будет такое
-<<<<<<< HEAD
-=======
         page = 1  # номер страницы с которой выкачиваю фото
->>>>>>> origin/master
         download_one_page(number_of_downloads, shoot_id, page_link, count, browser)
         # browser.close()
         browser.quit()
@@ -116,12 +96,3 @@ if __name__ == '__main__':
                 number_of_downloads = total_images % 200
             download_one_page(number_of_downloads, shoot_id, page, count, browser)
     print(f"скачивание завершено")
-<<<<<<< HEAD
-
-
-if __name__ == '__main__':
-    assert type(make_html_link('KSP_017605', 0)) == str
-    main()
-
-=======
->>>>>>> origin/master
