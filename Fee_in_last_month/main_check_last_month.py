@@ -2,11 +2,11 @@
 1. в фотоархивве можно отсмотреть только историю "засыла" изображений
 2. "засланное" изображение не всегда опубликовано, нужно проверть это отдельно
 """
+from Common.soup_tools import get_image_links
 from Fee_in_last_month.user_home_folder import home
 from kommersant_dates import KommersantDates
 from published_images import autorization, end_selenium
 from check_published_images import one_day_images_cycle
-from images_links import get_image_links
 from images_vocabulary import make_images_voc
 import re
 import os
@@ -33,7 +33,7 @@ autorization()
 
 
 # 4 перебираю сохраненные страницы
-count = 0   # счетчик опубликованнеых снимков за весь месяц
+count = 0  # счетчик опубликованнеых снимков за весь месяц
 list_of_html = os.listdir(html_folder)
 for i in list_of_html:
     with open(f'{html_folder}/{i}', 'r') as file:
@@ -42,6 +42,5 @@ for i in list_of_html:
     images_voc = make_images_voc(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешного  id
     count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', i)[0], path_to_file, count)
     print(f'{i} - {count}')
-
 
 end_selenium()
