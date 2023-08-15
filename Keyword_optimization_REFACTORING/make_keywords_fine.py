@@ -3,13 +3,11 @@
 """
 import time
 
-
 from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import Select
-import re
 import pyperclip
 from Common.authorization import autorization
+from Common.regex_tools import make_text_edit_link
 from Common.soup_tools import get_image_links
 from Keyword_optimization_REFACTORING.add_some_keywords import add_new_keywords
 from Keyword_optimization_REFACTORING.keywords_in_txt_file import write_keywords_in_txt_file
@@ -33,9 +31,6 @@ def chose_input():  # to use keywords from clip or enter your own
     return answer if len(answer) > 2 else keyword
 
 
-
-
-
 def keywords_search(keyword):  # find all my images with keyword escape KP part
     driver.find_element(By.CSS_SELECTOR, '#text').send_keys(keyword)
     driver.find_element(By.CSS_SELECTOR, '#au').send_keys('Евгений Павленко')
@@ -44,10 +39,7 @@ def keywords_search(keyword):  # find all my images with keyword escape KP part
     select.select_by_value('100')
     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
 
-    return check_keywords_number(keyword)
-
-
-
+    return check_keywords_number(keyword, driver)
 
 
 # def get_image_links(html):
@@ -64,10 +56,10 @@ def get_keyword_of_image(link):
     return keywords
 
 
-def make_text_edit_link(link):
-    inner_id = re.findall(r'(?<=id=)\d+', link)[0]
-    text_edit_link = f'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID={inner_id}&CloseForm=1'
-    return text_edit_link
+# def make_text_edit_link(link):
+#     inner_id = re.findall(r'(?<=id=)\d+', link)[0]
+#     text_edit_link = f'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID={inner_id}&CloseForm=1'
+#     return text_edit_link
 
 
 def select_action(keyword):
@@ -95,7 +87,7 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywo
         print(f'на странице {x} - {len(images_links)} снимков')
 
         for i in range(len(images_links)):  # (len(images_links)):
-            text_edit_link = make_text_edit_link(images_links[i].get('href'))
+            text_edit_link, image_id, inner_id = make_text_edit_link(images_links[i].get('href'))
             driver.get(text_edit_link)
             time.sleep(1)
             try:
@@ -135,7 +127,7 @@ def main():
     what_to_do = select_action(keyword)  # 2
     new_keywords = display_your_choice(what_to_do, keyword)
 
-    keyword_link, images_number = keywords_search(keyword) # found images number
+    keyword_link, images_number = keywords_search(keyword)  # found images number
 
     keywords_collection = get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywords)
 
