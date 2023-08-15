@@ -3,26 +3,26 @@
 """
 import time
 
-# pip install beautifulsoup4
-# pip install lxml
+
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import Select
 import re
 import pyperclip
 from Common.authorization import autorization
+from Common.soup_tools import get_image_links
 from Keyword_optimization_REFACTORING.add_some_keywords import add_new_keywords
 from Keyword_optimization_REFACTORING.keywords_in_txt_file import write_keywords_in_txt_file
 from Keyword_optimization_REFACTORING.make_better import keywords_opimization
 from Keyword_optimization_REFACTORING.remove_wrong_keyword import remove_mistake
 import logging
 
+from Keyword_optimization_REFACTORING.selenium_tools import check_keywords_number, go_my_images
 from Keyword_optimization_REFACTORING.user_communication import display_your_choice
 
 red = '\033[91m'
 green = '\33[32m'
 end = '\033[0m'
-
 
 
 def chose_input():  # to use keywords from clip or enter your own
@@ -33,22 +33,7 @@ def chose_input():  # to use keywords from clip or enter your own
     return answer if len(answer) > 2 else keyword
 
 
-def check_keywords_number(keyword):  # take number of images from site
-    try:
-        images_number = driver.find_element(By.CSS_SELECTOR,
-                                            'body > table:nth-child(6) > tbody:nth-child(1) > '
-                                            'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
-                                            'tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > '
-                                            'b:nth-child(1)')
-    except Exception as ex:
-        print(f'{red}снимков с ключевым словом {green}{keyword}{end}{red} не найденно{end}\n'
-              f'program terminated')
-        exit()
-    images_number = images_number.text
-    images_number = int(images_number.replace(' ', ''))  # удаляю возможные пробелы перед преобразованием в целое число
-    print(f'{green}{images_number} снимков с ключевым словом "{keyword}"{end}')
-    keyword_link = driver.current_url[:-1]
-    return keyword_link, images_number
+
 
 
 def keywords_search(keyword):  # find all my images with keyword escape KP part
@@ -62,20 +47,15 @@ def keywords_search(keyword):  # find all my images with keyword escape KP part
     return check_keywords_number(keyword)
 
 
-def go_my_images(link, keyword) -> object:
-    driver.get(link)
-    # browser.save_screenshot(f'/Volumes/big4photo/_PYTHON/KSP_selenium/screen_shorts/{keyword} - {link[-1]}.png')
-    driver.save_screenshot(f'/Users/evgeniy/Documents/keywords/{keyword} - {link[-1]}.png')
-    html = driver.page_source
-    return html
 
 
-def get_image_links(html):
-    soup = BeautifulSoup(html, 'lxml')
-    table = soup.find_all('table')[9]
-    tbody = table.find('tbody')
-    images_links = tbody.find_all(title="Добавить кадрировку")
-    return images_links
+
+# def get_image_links(html):
+#     soup = BeautifulSoup(html, 'lxml')
+#     table = soup.find_all('table')[9]
+#     tbody = table.find('tbody')
+#     images_links = tbody.find_all(title="Добавить кадрировку")
+#     return images_links
 
 
 def get_keyword_of_image(link):
@@ -98,9 +78,6 @@ def select_action(keyword):
           f"3 - {green}remove wrong keyword{end}\n"
           f'4 - {green}and keywords collection to images{end}\n')
     return int(input())
-
-
-
 
 
 def set_keywords_to_site(good_keywords):
@@ -157,7 +134,9 @@ def main():
     keyword = chose_input()  # keyword for work
     what_to_do = select_action(keyword)  # 2
     new_keywords = display_your_choice(what_to_do, keyword)
-    keyword_link, images_number = keywords_search(keyword)
+
+    keyword_link, images_number = keywords_search(keyword) # found images number
+
     keywords_collection = get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywords)
 
     driver.close()
