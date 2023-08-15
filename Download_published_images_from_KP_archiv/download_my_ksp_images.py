@@ -12,6 +12,7 @@ from Common.notification import system_notification
 from tkinter import filedialog
 
 from Common.soup import get_soup
+from Keyword_optimization_REFACTORING.selenium_tools import go_my_images
 
 
 def select_folder():
@@ -42,12 +43,6 @@ def get_image_links(html):
     tbody = table.find('tbody')
     images_links = tbody.find_all(title="Добавить кадрировку")
     return images_links
-
-
-def go_my_images(page_link) -> object:
-    browser.get(page_link)
-    html = browser.page_source
-    return html
 
 
 def main_cycle():
