@@ -2,7 +2,6 @@
 20220729 script for optimization keywords in KSP archiv
 """
 import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import pyperclip
@@ -13,9 +12,7 @@ from Keyword_optimization_REFACTORING.add_some_keywords import add_new_keywords
 from Keyword_optimization_REFACTORING.keywords_in_txt_file import write_keywords_in_txt_file
 from Keyword_optimization_REFACTORING.make_better import keywords_opimization
 from Keyword_optimization_REFACTORING.remove_wrong_keyword import remove_mistake
-import logging
-
-from Keyword_optimization_REFACTORING.selenium_tools import check_keywords_number, go_my_images
+from Common.selenium_tools import check_keywords_number, go_my_images
 from Keyword_optimization_REFACTORING.user_communication import display_your_choice
 
 red = '\033[91m'
@@ -42,24 +39,10 @@ def keywords_search(keyword):  # find all my images with keyword escape KP part
     return check_keywords_number(keyword, driver)
 
 
-# def get_image_links(html):
-#     soup = BeautifulSoup(html, 'lxml')
-#     table = soup.find_all('table')[9]
-#     tbody = table.find('tbody')
-#     images_links = tbody.find_all(title="Добавить кадрировку")
-#     return images_links
-
-
 def get_keyword_of_image(link):
     driver.get(link)
     keywords = driver.find_element(By.ID, 'PhotoTextInfoControl1_Keywords').text
     return keywords
-
-
-# def make_text_edit_link(link):
-#     inner_id = re.findall(r'(?<=id=)\d+', link)[0]
-#     text_edit_link = f'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID={inner_id}&CloseForm=1'
-#     return text_edit_link
 
 
 def select_action(keyword):
@@ -82,7 +65,7 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywo
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
     for x in range(1, range_number):  # главный цикл работы программы
         link = f'{keyword_link}2&pg={x}'
-        html = go_my_images(link, keyword)  # получаю html  открытой страницы
+        html = go_my_images(link, keyword, driver)  # получаю html  открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
         print(f'на странице {x} - {len(images_links)} снимков')
 
