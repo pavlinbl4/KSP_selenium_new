@@ -3,10 +3,9 @@
 
 import time
 from selenium.webdriver.common.by import By
-import re
 from Common.authorization import autorization
 from Common.create_XLXS_report_file import create_report
-from Common.soup import get_soup
+from Common.regex_tools import make_text_edit_link
 from Common.soup_tools import get_image_links
 from Common.write_to_xlsx import write_to_xlsx
 from KSP_shoot_create.find_images import find_images_by_id
@@ -23,11 +22,11 @@ from Common.choose_input import chose_input
 #     return tbody.find_all(title="Добавить кадрировку")  # images_links
 
 
-def make_text_edit_link(link):
-    inner_id = re.findall(r'(?<=id=)\d+', link)[0]
-    image_id = re.findall(r'(?<=photocode=)[^&]+', link)[0]
-    image_edit_link = f'https://image.kommersant.ru/photo/archive/ViewPhoto.asp?ID={inner_id}&Lang=1&L=1'
-    return image_edit_link, image_id, inner_id
+# def make_text_edit_link(link):
+#     inner_id = re.findall(r'(?<=id=)\d+', link)[0]
+#     image_id = re.findall(r'(?<=photocode=)[^&]+', link)[0]
+#     image_edit_link = f'https://image.kommersant.ru/photo/archive/ViewPhoto.asp?ID={inner_id}&Lang=1&L=1'
+#     return image_edit_link, image_id, inner_id
 
 
 def main_modul():
