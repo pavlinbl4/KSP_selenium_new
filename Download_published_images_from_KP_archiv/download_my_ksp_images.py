@@ -12,6 +12,7 @@ from Common.notification import system_notification
 from tkinter import filedialog
 
 from Common.soup import get_soup
+from Common.soup_tools import get_image_links
 from Keyword_optimization_REFACTORING.selenium_tools import go_my_images
 
 
@@ -37,12 +38,12 @@ def make_shoot_edit_link(link):
     return shoot_edit_link
 
 
-def get_image_links(html):
-    soup = get_soup(html)
-    table = soup.find_all('table')[9]
-    tbody = table.find('tbody')
-    images_links = tbody.find_all(title="Добавить кадрировку")
-    return images_links
+# def get_image_links(html):
+#     soup = get_soup(html)
+#     table = soup.find_all('table')[9]
+#     tbody = table.find('tbody')
+#     images_links = tbody.find_all(title="Добавить кадрировку")
+#     return images_links
 
 
 def main_cycle():
