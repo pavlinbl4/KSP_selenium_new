@@ -1,5 +1,5 @@
+from Common.regex_tools import keywords_opimization
 from Common.set_to_string import convert_set_to_string
-from Keyword_optimization_REFACTORING.make_better import keywords_opimization
 
 
 def add_new_keywords(new_keywords: str, keywords: str) -> str:
