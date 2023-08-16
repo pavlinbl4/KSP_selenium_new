@@ -37,10 +37,6 @@ def check_id_image(image_id):
     return driver.page_source
 
 
-def end_selenium():
-    driver.close()
-    driver.quit()
-
 
 def autorization(photographer):  # авторизация на главной странице
     driver.get(first_loggin)
@@ -101,4 +97,5 @@ def publication_info(k, count, check_date):
 driver = webdriver.Chrome(options=setting_chrome_options())
 
 if __name__ == '__main__':
-    select_today_published_images('01.07.2023')
+    # select_today_published_images('01.07.2023')
+    change_photographer('Евгений Павленко')
