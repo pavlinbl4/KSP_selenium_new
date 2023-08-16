@@ -20,11 +20,13 @@ def scrap_html(page_link, path):
 
     trs_pub = soup.find('table', id='HistoryLogGrid').find('tbody').find_all('tr')
 
-    komm_date = soup.find('tr', class_="row-alternating").find('td', class_="date-col").text[:10].split('.')
+    komm_date = soup.find('tr', class_="row-alternating").find('td', class_="date-col").text[:10].split(
+        '.')  # list [ day, month, year]
     my_date_format = komm_date[2] + komm_date[1] + komm_date[0]  # получаю дату передачи съемки
 
     for i in range(1, len(trs)):
-        file_renames[trs[i].find('td').find_next('td').text[:-6]] = [trs[i].find('td').text[:-4]]
+        file_renames[trs[i].find('td').find_next('td').text[:-6]] = [
+            trs[i].find('td').text[:-4]]  # dict {kommers)file_name:[my_file_name]}
 
     for i in range(len(trs_pub)):
         xxx = trs_pub[i].find(class_="user-col").find_next('td').text
@@ -36,16 +38,7 @@ def scrap_html(page_link, path):
             way_to_file = find_no_ext(original_file_name, path)  # function to find file on HDD
             if len(way_to_file) > 0:  # if file wasn't found
                 change_color_class(way_to_file[0], photo_id, color='Red')
-                # extension = get_file_extension(way_to_file[0])  # originl_file_extension
-                # if extension in ['DNG', 'dng', 'JPG', 'jpg', 'JPEG',
-                #                  'jpeg']:  # в зависимости от типа файла выбирать метод редактирования IPTC
-                #     change_color_class_dng(way_to_file[0], photo_id)  # function to change IPTC data
-                # else:
-                #     change_color_class_raw(way_to_file[0],
-                #                            photo_id)  # function to change IPTC data
-
             else:
-
                 print(f"{Fore.RED} I don't find {original_file_name} in {path}{Fore.RESET}")
                 write_lost_files_info(original_file_name, photo_id)
 
