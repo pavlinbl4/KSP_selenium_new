@@ -21,7 +21,7 @@ def create_report_file(month_name: str, html_folder: str, photographer: Optional
     else:
         wb = Workbook()  # если файла еще нет
         ws = wb.active  # если файла еще нет
-        ws.title = month_name  # если файла еще нет
+        ws.title = photographer  # если файла еще нет
 
     set_column_widths()
 
