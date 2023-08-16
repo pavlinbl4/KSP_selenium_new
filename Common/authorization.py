@@ -15,7 +15,6 @@ def autorization():
     driver.find_element(By.NAME, "loginbtn").click()
     return driver
 
+
 if __name__ == '__main__':
     autorization()
-
-
