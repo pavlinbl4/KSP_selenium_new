@@ -2,12 +2,12 @@
 1. в фотоархивве можно отсмотреть только историю "засыла" изображений
 2. "засланное" изображение не всегда опубликовано, нужно проверить это отдельно
 """
-from Common.soup_tools import get_image_links
 from Fee_in_last_month.remove_folder import delete_folder
 from Fee_in_last_month.user_home_folder import home
 from Fee_in_last_month.what_month import month_number
 from published_images import autorization, end_selenium, select_today_published_images, change_photographer
 from check_published_images import one_day_images_cycle
+from images_links import get_image_links
 from images_vocabulary import make_image_dict
 import re
 import os
@@ -56,33 +56,31 @@ def main_modul(photographer: str, month_n_int: int):
 
 
 if __name__ == '__main__':
-    month_n_int = month_number()  # int(input('input months number'))
+    # month_n_int = month_number()  # int(input('input months number'))
     autorization('Евгений Павленко')
 
-    # camera_men = [
-    #     'Евгений Павленко',
-    #     'Марина Мамонтова',
-    #     'Игорь Евдокимов',
-    #     'Александр Чиженок',
-    #     'Майя Жинкина',
-    #     'Александр Петросян',
-    #     'Александр Коряков',
-    #     'Александр Казаков',
-    #     'Дмитрий Духанин',
-    #     'Алексей Смагин',
-    #     'Глеб Щелкунов',
-    #     'Роман Яровицын',
-    #     'Александр Миридонов',
-    #     'Анатолий Жданов',
-    #     'Юрий Стрелец',
-    #     'Дмитрий Лебедев',
-    # ]
     camera_men = [
         'Евгений Павленко',
+        'Марина Мамонтова',
+        'Игорь Евдокимов',
+        'Александр Чиженок',
+        'Майя Жинкина',
+        'Александр Петросян',
         'Александр Коряков',
+        'Александр Казаков',
+        'Дмитрий Духанин',
+        'Алексей Смагин',
+        'Глеб Щелкунов',
+        'Роман Яровицын',
+        'Александр Миридонов',
+        'Анатолий Жданов',
+        'Юрий Стрелец',
+        'Дмитрий Лебедев',
+        'Алексей Смышляев',
     ]
+
 
     for photic in camera_men:
         print(f"{photic = }")
-        main_modul(photographer=photic, month_n_int=month_n_int)
+        main_modul(photographer=photic, month_n_int=7)
     end_selenium()
