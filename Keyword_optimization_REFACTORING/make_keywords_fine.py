@@ -6,11 +6,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import pyperclip
 from Common.authorization import autorization
-from Common.regex_tools import make_text_edit_link
+from Common.regex_tools import make_text_edit_link, keywords_opimization
 from Common.soup_tools import get_image_links
 from Keyword_optimization_REFACTORING.add_some_keywords import add_new_keywords
 from Keyword_optimization_REFACTORING.keywords_in_txt_file import write_keywords_in_txt_file
-from Keyword_optimization_REFACTORING.make_better import keywords_opimization
 from Keyword_optimization_REFACTORING.remove_wrong_keyword import remove_mistake
 from Common.selenium_tools import check_keywords_number, go_my_images
 from Keyword_optimization_REFACTORING.user_communication import display_your_choice
