@@ -4,6 +4,7 @@ import time
 from Common.kp_image_info_page import grab_image_info_page
 from Common.regex_tools import make_text_edit_link, replace_to_comma
 from Common.soup_tools import get_image_links
+from shoot_history.lost_files_to_csv import write_kp_files_keywords
 
 red = '\033[91m'
 green = '\33[32m'
@@ -11,6 +12,7 @@ end = '\033[0m'
 
 
 def set_keywords_to_site(good_keywords, driver):
+    driver.find_element(By.NAME, 'KeywordsRus').clear()
     driver.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
     driver.find_element(By.NAME, 'Add').click()
 
@@ -47,7 +49,7 @@ def check_keywords_number(keyword, driver):  # take number of images from site
 def images_rotator(images_number, keyword_link, driver):
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
     # for x in range(1, range_number):  # главный цикл работы программы
-    for x in range(2, 3):  # главный цикл работы программы
+    for x in range(3, 7):  # главный цикл работы программы
         link = f'{keyword_link}2&pg={x}'
         html = go_my_images(link, keyword='', driver=driver)  # получаю html  открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
@@ -58,6 +60,13 @@ def images_rotator(images_number, keyword_link, driver):
                 images_links[i].get('href'))  # generate edit image link
             image_id, caption, keywords = grab_image_info_page(driver, text_edit_link)  # grab info
 
+
+
             # if keywords not empty - optimise it
-            if keywords != '':
-                optimized_keywords = replace_to_comma(keywords)
+            if keywords != '' and keywords is not None:
+                write_kp_files_keywords(image_id, caption, keywords)  # save data in csv file
+
+                optimized_keywords = replace_to_comma(keywords)  # replace ; with comma
+                print(optimized_keywords)
+
+                set_keywords_to_site(optimized_keywords, driver)  # write optimized keywords to site
