@@ -11,7 +11,7 @@ from Common.soup_tools import get_image_links
 from Keyword_optimization_REFACTORING.add_some_keywords import add_new_keywords
 from Keyword_optimization_REFACTORING.keywords_in_txt_file import write_keywords_in_txt_file
 from Keyword_optimization_REFACTORING.remove_wrong_keyword import remove_mistake
-from Common.selenium_tools import check_keywords_number, go_my_images
+from Common.selenium_tools import check_keywords_number, go_my_images, set_keywords_to_site
 from Keyword_optimization_REFACTORING.user_communication import display_your_choice
 
 red = '\033[91m'
@@ -54,11 +54,6 @@ def select_action(keyword):
     return int(input())
 
 
-def set_keywords_to_site(good_keywords):
-    driver.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
-    driver.find_element(By.NAME, 'Add').click()
-
-
 def get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywords):
     keywords_collection = set()
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
@@ -88,7 +83,7 @@ def get_images_links(images_number, keyword_link, keyword, what_to_do, new_keywo
                     print(f"{green}keywords added {end}{red}{keyword}{end}{green} to images{end}")
                     add_new_keywords(new_keywords, keywords)
 
-                set_keywords_to_site(good_keywords)
+                set_keywords_to_site(good_keywords, driver)
 
                 temp_set = set(good_keywords.split(', '))
                 keywords_collection.update(temp_set)
