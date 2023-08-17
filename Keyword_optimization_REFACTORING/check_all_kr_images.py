@@ -1,6 +1,6 @@
 from Common.authorization import autorization
 from KSP_shoot_create.find_images import find_images_by_id
-from Common.selenium_tools import check_keywords_number, images_rotator
+from Common.selenium_tools import check_keywords_number, images_rotator, end_selenium
 
 
 def main():
@@ -17,6 +17,7 @@ def main():
     images_rotator(images_number, keyword_link, driver)
 
     # 5 work complite close driver
+    end_selenium(driver)
 
 
 if __name__ == '__main__':
