@@ -40,7 +40,7 @@ def check_keywords_number(keyword, driver):  # take number of images from site
 def images_rotator(images_number, keyword_link, driver):
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
     # for x in range(1, range_number):  # главный цикл работы программы
-    for x in range(141, range_number):  # главный цикл работы программы переход по страницам архива
+    for x in range(160, range_number):  # главный цикл работы программы переход по страницам архива
         link = f'{keyword_link}2&pg={x}'
         html = go_my_images(link, keyword='', driver=driver)  # получаю html  открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
