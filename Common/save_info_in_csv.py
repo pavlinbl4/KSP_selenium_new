@@ -22,7 +22,7 @@ def write_lost_files_info(original_file_name, photo_id):
     csv_writer(info, columns_name, csv_file)
 
 def write_kp_files_keywords(image_id, caption, keywords):
-    csv_file = create_file_if_not_exists('Kommersant', 'images_keywords.csv')
+    csv_file = create_file_if_not_exists('Kommersant', 'KR_images_keywords.csv')
     columns_name = ['image_id', 'caption', 'keywords']
     info = [image_id, caption, keywords]
     csv_writer(info, columns_name, csv_file)
