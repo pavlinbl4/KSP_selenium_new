@@ -1,7 +1,7 @@
 from Keyword_optimization_REFACTORING.new_input_window import input_window
 
 
-def display_your_choice(what_to_do:int, keyword:str):
+def display_your_choice(what_to_do: int, keyword: str) -> str:
     green = '\33[32m'
     end = '\033[0m'
 
@@ -17,7 +17,6 @@ def display_your_choice(what_to_do:int, keyword:str):
         new_keywords = input_window()
     return new_keywords
 
+
 if __name__ == '__main__':
     display_your_choice(3, "crocodile")
-
-
