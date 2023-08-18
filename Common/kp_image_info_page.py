@@ -14,26 +14,26 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def set_keywords_to_site(good_keywords, driver):
-    main_window = driver.current_window_handle
-    try:
-        driver.find_element(By.NAME, 'KeywordsRus').clear()
-        driver.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
-        driver.find_element(By.NAME, 'Add').click()
-
-        wait = WebDriverWait(driver, 1)
-        alert = wait.until(EC.alert_is_present())
-
-        if alert:
-            alert.accept()
-
-
-    except TimeoutException:
-        print('no TimeoutException')
-
-    driver.switch_to.window(main_window)
-    driver.find_element(By.ID, 'DescriptionRus').click()
-    driver.find_element(By.ID, 'DescriptionRus').send_keys('требуется описание')
+    # main_window = driver.current_window_handle
+    # try:
+    driver.find_element(By.NAME, 'KeywordsRus').clear()
+    driver.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
     driver.find_element(By.NAME, 'Add').click()
+
+        # wait = WebDriverWait(driver, 1)
+        # alert = wait.until(EC.alert_is_present())
+        #
+        # if alert:
+        #     alert.accept()
+
+
+    # except TimeoutException:
+    #     print('no TimeoutException')
+
+    # driver.switch_to.window(main_window)
+    # driver.find_element(By.ID, 'DescriptionRus').click()
+    # driver.find_element(By.ID, 'DescriptionRus').send_keys('требуется описание')
+    # driver.find_element(By.NAME, 'Add').click()
 
 
 def grab_image_info_page(driver, info_page_url):
