@@ -1,32 +1,11 @@
-from selenium.webdriver.common.by import By
-
-from Common.kp_image_info_page import grab_image_info_page
-from Common.regex_tools import make_text_edit_link, replace_to_comma
+from Common.kp_image_info_page import image_info_optimization
+from Common.regex_tools import make_text_edit_link
 from Common.soup_tools import get_image_links
-from Common.save_info_in_csv import write_kp_files_keywords
-
-from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 
 red = '\033[91m'
 green = '\33[32m'
 end = '\033[0m'
-
-
-def set_keywords_to_site(good_keywords, driver):
-    driver.find_element(By.NAME, 'KeywordsRus').clear()
-    driver.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
-    try:
-        driver.find_element(By.NAME, 'Add').click()
-    except UnexpectedAlertPresentException:
-        alert = driver.switch_to.alert
-        alert.accept()
-    driver.find_element(By.ID, 'DescriptionRus').get_attribute('value').clear()
-    driver.find_element(By.ID, 'DescriptionRus').get_attribute('value').send_keys('требуется описание')
-    driver.find_element(By.NAME, 'Add').click()
 
 
 def end_selenium(driver):
@@ -61,22 +40,15 @@ def check_keywords_number(keyword, driver):  # take number of images from site
 def images_rotator(images_number, keyword_link, driver):
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
     # for x in range(1, range_number):  # главный цикл работы программы
-    for x in range(141, range_number):  # главный цикл работы программы
+    for x in range(141, range_number):  # главный цикл работы программы переход по страницам архива
         link = f'{keyword_link}2&pg={x}'
         html = go_my_images(link, keyword='', driver=driver)  # получаю html  открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
         print(f'на странице {x} - {len(images_links)} снимков')
 
-        for i in range(len(images_links)):  # (len(images_links)):
+        for i in range(len(images_links)):  # (len(images_links)):  # обработка каждого снимка на странице
+
             text_edit_link, image_id, inner_id = make_text_edit_link(
                 images_links[i].get('href'))  # generate edit image link
-            image_id, caption, keywords = grab_image_info_page(driver, text_edit_link)  # grab info
 
-            # if keywords not empty - optimise it
-            if keywords != '' and keywords is not None:
-                write_kp_files_keywords(image_id, caption, keywords)  # save data in csv file
-
-                optimized_keywords = replace_to_comma(keywords)  # replace ; with comma
-                print(optimized_keywords)
-
-                set_keywords_to_site(optimized_keywords, driver)  # write optimized keywords to site
+            image_info_optimization(driver, text_edit_link)
