@@ -7,7 +7,7 @@ from Common.authorization import autorization
 from selenium.common.exceptions import NoSuchElementException
 from Common.regex_tools import replace_to_comma
 from Common.save_info_in_csv import write_kp_files_keywords
-from selenium.common.exceptions import UnexpectedAlertPresentException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,11 +27,8 @@ def set_keywords_to_site(good_keywords, driver):
             alert.accept()
 
 
-    except UnexpectedAlertPresentException:
-        alert = driver.switch_to.alert
-        print(alert.text)
-        alert.accept()
-        print("бла бла бла")
+    except TimeoutException:
+        print('no TimeoutException')
 
     driver.switch_to.window(main_window)
     driver.find_element(By.ID, 'DescriptionRus').click()
