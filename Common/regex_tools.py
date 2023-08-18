@@ -1,17 +1,18 @@
 import re
+import chardet
+import pyperclip
 
 words_to_remove = r'_РЕЛИГИЯ|_гипермаркеты|_фирмы|_ПРЕДМЕТ_|_People|_ГОРОДА И СТРАНЫ_|_PERSONS|_CITY|_ИМЯ СОБСТВЕННОЕ_|COUNTRY|_РУССКИЙ_|_ГОРОДА И СТРАНЫ|\|'
 
 
-def keywords_opimization(keywords):
-    step_1 = re.sub(words_to_remove, "", keywords).strip()  # remove this words
-    step_2 = re.sub(r'\b([^\W\d_]+)(\s+\1)+\b', r'\1', re.sub(r'\W+', ', ', step_1).strip(), flags=re.I).strip()
-    keywords = re.sub(r'\s+', ' ', step_2)
-    return keywords
+def get_file_extension(path_to_file):
+    re_pattern = r'(?<=\.)[1A-Za-z]{3,4}'
+    extension = re.findall(re_pattern, path_to_file)[0]
+    return extension  # string with file extension
 
 
 def replace_to_comma(keywords: str) -> str:
-    step_1 = re.sub(words_to_remove, '', keywords).strip()  # remove this words
+    step_1 = re.sub(words_to_remove, '', keywords).strip()  # remove bad  words
     return re.sub(r';', ', ', step_1)
 
 
@@ -29,9 +30,36 @@ def full_shoot_html_link(shoot_id: str, page: int) -> str:  # create full shoot 
            f'&sourcecode={splited_soot_id[0]}&pagesize=200&previewsize=128&page={str(page)}&nl=true&ord=F'
 
 
+def keywords_opimization(string):
+    # remove bad words
+    no_bad_words = re.sub(words_to_remove, "", string).strip()
+
+    # remove doubles
+    cleaned_string = re.sub(r'\b(\w+)\b(?=.*\b\1\b)', r'', no_bad_words)
+
+    # Remove all punctuation except commas
+    cleaned_string = re.sub(r'(?<!\w)[^\w\s,-]|[^\w\s,-](?!\w)', '', cleaned_string)
+
+    # Extract words and separate with commas
+    words = re.findall(r'\b[\w-]+\b', cleaned_string)
+    result = ', '.join(words)
+
+    # set limit of keywords
+    while len(result) > 500:
+        del words[-1]
+        result = ', '.join(words)
+
+    return result
+
+
 if __name__ == '__main__':
     assert type(full_shoot_html_link('KSP_017605', 0)) == str
-    print(f"{'replace_to_comma'}: {replace_to_comma('Санкт - Петербург, Петрикирхе;архитектура;религия,религия ')}")
-    print(
-        f"{'keywords_opimization'}: "
-        f"{keywords_opimization('Санкт-Петербург, Петрикирхе;архитектура;религия, архитектура')}")
+
+    contest = keywords_opimization(
+        "_РУССКИЙ_;Эффективность;автоматизированный;бесперебойность;взаимодействие;гаджет;диспетчер;дисплей;импортозамещение;информационный;информация;комплекс;компьютер;ленэнерго;линия;монитор;мощность;наука;новый;обеспечивать;оборудование;объединять;объект;отечественный;передача;подстанция;программное обеспечение;производство;промышленность;процесс;пункт;россеть;российский;санкции;связь;сеть;система;современный;сосредотачивать;социально;телеметрический;технологический;технологичный;технология;управлени")
+    pyperclip.copy(contest)
+    result = chardet.detect(contest.encode())
+    encoding = result['encoding']
+
+    # Выводим найденную кодировку
+    print(encoding)
