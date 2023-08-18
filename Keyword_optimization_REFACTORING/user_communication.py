@@ -1,12 +1,10 @@
-
 from Keyword_optimization_REFACTORING.new_input_window import input_window
 
-red = '\033[91m'
-green = '\33[32m'
-end = '\033[0m'
 
+def display_your_choice(what_to_do:int, keyword:str):
+    green = '\33[32m'
+    end = '\033[0m'
 
-def display_your_choice(what_to_do, keyword):
     new_keywords = None
     if what_to_do == 3:
         print(f'remove keyword {green}{keyword}{end}\n')
