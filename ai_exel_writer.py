@@ -20,7 +20,7 @@ def universal_xlsx_writer(columns_names, row_data, file_path, sheet_name):
         ws.title = sheet_name
 
         set_column_widths()
-x
+
         wb.save(file_path)
 
     wb = openpyxl.load_workbook(file_path, read_only=False)
@@ -49,4 +49,4 @@ if __name__ == '__main__':
     sheet_name = 'Sheet_name'
 
     universal_xlsx_writer(columns, row_data, file_path, sheet_name)
-    # create_excel(columns, row_data, file_path, sheet_name)
+
