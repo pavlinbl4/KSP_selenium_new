@@ -15,11 +15,6 @@ def grab_image_info_page(driver, info_page_url):
         image_id = driver.find_element(By.ID, 'photoPreview').find_element(By.TAG_NAME, 'span').text
         caption = driver.find_element(By.ID, 'DescriptionRus').get_attribute('value')
 
-    except UnexpectedAlertPresentException:
-        alert = driver.switch_to.alert
-        alert.accept()
-        print("Alert window")
-
     except NoSuchElementException:
         print("One of the elements was not found on the page")
         return None, None, None
