@@ -6,8 +6,8 @@ def add_new_keywords(new_keywords: str, keywords: str) -> str:
     good_keywords = keywords_opimization(keywords)
     good_set = set(word.strip() for word in good_keywords.split(','))
     new_keywords_set = set(word.strip() for word in new_keywords.split(','))
-    apdated_keywords = good_set.union(new_keywords_set)
-    return convert_set_to_string(apdated_keywords)
+    updated_keywords = good_set.union(new_keywords_set)
+    return convert_set_to_string(updated_keywords)
 
 
 if __name__ == '__main__':
