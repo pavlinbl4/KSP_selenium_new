@@ -5,6 +5,8 @@ available when you press the button with the hammer and wrench icon.
 
 from Common.authorization import autorization
 from selenium.common.exceptions import NoSuchElementException
+
+from Common.lematization import lema
 from Common.regex_tools import replace_to_comma, keywords_opimization
 from Common.save_info_in_csv import write_kp_files_keywords
 from selenium.common.exceptions import TimeoutException
@@ -60,10 +62,17 @@ def image_info_optimization(driver, text_edit_link):
         print(optimized_keywords)
 
         set_keywords_to_site(optimized_keywords, driver)  # write optimized keywords to site
+    elif keywords == '':
+        #  if no keywords lemmatize caption
+        keywords_from_caption = ", ".join(lema(caption))
+
+        set_keywords_to_site(keywords_from_caption, driver)  # write  keywords  from caption to site
+
+        write_kp_files_keywords(image_id, keywords_from_caption, keywords)  # save data in csv file
 
 
 if __name__ == '__main__':
     t_driver = autorization()
 
     image_info_optimization(t_driver,
-                            'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID=3362860&CloseForm=1')
+                            'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID=3791347&CloseForm=1')
