@@ -2,7 +2,11 @@ import re
 
 words_to_remove = r'_РЕЛИГИЯ|_гипермаркеты|_фирмы|_ПРЕДМЕТ_|_People|_ГОРОДА И СТРАНЫ_|_PERSONS|_CITY|_ИМЯ СОБСТВЕННОЕ_|COUNTRY|_РУССКИЙ_|_ГОРОДА И СТРАНЫ|\|'
 
-
+def extract_only_words(text_string):
+    if type(text_string) is list:
+        text_string = ''.join(text_string)
+    pattern = r'[А-Яа-яA-Za-z]+\-*[А-Яа-яA-Za-z]+'
+    return re.findall(pattern, text_string)
 def keywords_opimization(string):
     # remove bad words
     no_bad_words = re.sub(words_to_remove, "", string).strip()
