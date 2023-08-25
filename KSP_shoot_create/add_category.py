@@ -6,38 +6,32 @@ from selenium.webdriver.support.ui import Select
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
 
 
-def open_shoot_creation_page(browser):
-    browser.find_element(By.CSS_SELECTOR,
-                         "body > table.logotbl > tbody > tr:nth-child(3)"
-                         " > td > table > tbody > tr > td:nth-child(2) > a").click()
-    browser.find_element(By.ID,
-                         "nav_shoots_change").click()
-    return browser
+# def open_shoot_creation_page(driver):
+#     driver.find_element(By.CSS_SELECTOR,
+#                          "body > table.logotbl > tbody > tr:nth-child(3)"
+#                          " > td > table > tbody > tr > td:nth-child(2) > a").click()
+#     driver.find_element(By.ID,
+#                          "nav_shoots_change").click()
+#     return driver
 
 
-def select_category(category_number, browser):
-    wait = WebDriverWait(browser, 10)
-    browser.execute_script("OpenPopupWindow('ShootSubjectsAdmin.asp')")
+def select_category(category_number, driver):
+    wait = WebDriverWait(driver, 10)
+    driver.execute_script("OpenPopupWindow('ShootSubjectsAdmin.asp')")
     wait.until(EC.number_of_windows_to_be(2))
-    browser.switch_to.window(browser.window_handles[1])
-    category = Select(browser.find_element(By.ID, 'SubjectID'))
+    driver.switch_to.window(driver.window_handles[1])
+    category = Select(driver.find_element(By.ID, 'SubjectID'))
     category.select_by_value(category_number)
-    browser.find_element(By.XPATH, '//*[@id="addrow"]').click()
-    browser.find_element(By.XPATH, '//*[@id="DivSubmit"]/input[1]').click()
-    return browser
+    driver.find_element(By.XPATH, '//*[@id="addrow"]').click()
+    driver.find_element(By.XPATH, '//*[@id="DivSubmit"]/input[1]').click()
+    return driver
+
+# def add_category_to_shoot():
+#     category_number = create_checkbox_dict()
+#     # browser = autorization()  # this only for test
+#     # browser = open_shoot_creation_page(browser)   # this only for test
+#     select_category(category_number, driver)
 
 
-def add_category_to_shoot():
-    category_number = create_checkbox_dict()
-    # browser = autorization()  # this only for test
-    # browser = open_shoot_creation_page(browser)   # this only for test
-    select_category(category_number, browser)
-
-
-
-
-
-
-if __name__ == '__main__':
-    add_category_to_shoot()
-
+# if __name__ == '__main__':
+#     add_category_to_shoot()
