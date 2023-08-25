@@ -8,7 +8,7 @@ from Common.authorization import autorization
 from Common.notification import system_notification
 from KSP_shoot_create.add_category import select_category
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
-from Delete_garbage_photo_REFACTORING.input_window import get_input_data
+from KSP_shoot_create.input_window import get_input_data
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
