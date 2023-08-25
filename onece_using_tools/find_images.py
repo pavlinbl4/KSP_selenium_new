@@ -2,7 +2,7 @@
 # from selenium.webdriver.support.ui import Select
 # from Common.authorization import autorization
 #
-егкт щаа
+
 # def find_images_by_id(shoot_id, driver):  # авторизация гна главной странице
 #
 #     driver.find_element(By.CSS_SELECTOR, '#au').clear()
