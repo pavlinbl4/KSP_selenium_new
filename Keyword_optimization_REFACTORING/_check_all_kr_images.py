@@ -16,7 +16,7 @@ def main():
     # 4 check all find images
     images_rotator(images_number, keyword_link, driver)
 
-    # 5 work complite close driver
+    # 5 work complete close driver
     end_selenium(driver)
 
 
