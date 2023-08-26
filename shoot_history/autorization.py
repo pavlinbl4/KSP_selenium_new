@@ -9,8 +9,8 @@ def check_shoot_id(shoot_id, driver):
     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
 
 
-def open_page(page_link, browser):
-    browser.get(page_link)
+def open_page(page_link, driver):
+    driver.get(page_link)
 
 
 def work_to_history(driver):
@@ -23,9 +23,7 @@ def work_to_history(driver):
     return driver.page_source
 
 
-def end_selenium(driver):
-    driver.close()
-    driver.quit()
 
 
-# report_web_link = 'https://image.kommersant.ru/photo/archive/pubhistory.asp?ID='
+
+
