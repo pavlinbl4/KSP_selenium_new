@@ -1,17 +1,18 @@
 from Common.authorization import autorization
 from Common.choose_input import chose_input
 from Common.save_page_html import save_html_page, read_html
-from Common.selenium_tools import end_selenium, open_page, work_to_history
+from Common.selenium_tools import end_selenium
 from Common.write_xlsx import write_rename_voc
+from autorization import  open_page, work_to_history
 from make_page_link import make_page_link
-from _scrap_html import scrap_html, select_folder
+from _scrap_html import scrap_html
 
 path_to_file = '/Users/evgeniy/Documents/Kommersant/shoot_rename/shoot_story.xlsx'
 
 shoot_id = chose_input()
 
-path = select_folder()
-# path = '/Users/evgeniy/Pictures'
+# path = select_folder()
+path = '/Users/evgeniy/Pictures'
 driver = autorization()
 
 page_link = make_page_link(shoot_id)
