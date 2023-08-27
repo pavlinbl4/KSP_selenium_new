@@ -14,7 +14,7 @@ class HomeFolder:
 
     def make_path(self, subfolder_name, folder_number):
         self.subfolder_name = subfolder_name
-        self.folder_number = folder_number
+        # self.folder_number = folder_number
         return f'{home.user_home_directory}/{home.folders_voc[2]}/{home.subfolder_name}'
 
     def add_subfolder_to_kommersant(self, subfolder_name):
@@ -23,4 +23,4 @@ class HomeFolder:
 
 
 home = HomeFolder()
-home.make_path('test',0)
+home.add_subfolder_to_kommersant('add_subfolder_to_kommersant')
