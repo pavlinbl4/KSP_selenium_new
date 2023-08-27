@@ -1,10 +1,17 @@
 from pymystem3 import Mystem
-from Common.regex_tools import extract_only_words
+
+from Common.regex_tools import extract_words_no_digits
+from Common.best_keywords import keywords_optimization
 
 
-def lema(any_text:str)->list:
-    lemmatized_words = extract_only_words(Mystem().lemmatize(any_text))
-    return [word for word in lemmatized_words if len(word) > 2]
+def lema_minus_bad_words(any_text: str):
+    all_words_list = lema(any_text)
+    return keywords_optimization(", ".join(all_words_list))
+
+
+def lema(any_text: str) -> list:
+    lemmatized_words_lst = extract_words_no_digits(Mystem().lemmatize(any_text))
+    return [word for word in lemmatized_words_lst if len(word) > 2]
 
 
 if __name__ == '__main__':
