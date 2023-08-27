@@ -1,6 +1,6 @@
 import re
 
-from bad_words_job import get_bad_words_from_txt_file
+from Common.bad_words_job import get_bad_words_from_txt_file
 
 
 # keyword optimization with using "bad words" from the text file
