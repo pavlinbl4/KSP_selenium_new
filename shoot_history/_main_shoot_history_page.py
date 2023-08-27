@@ -9,7 +9,8 @@ from scrap_html import scrap_html
 
 path_to_file = '/Users/evgeniy/Documents/Kommersant/shoot_rename/shoot_story.xlsx'
 
-shoot_id = chose_input()
+# enter shoot id or use it from clipboard
+shoot_id = chose_input_or_use_clip()
 
 path = select_folder_via_gui()
 
