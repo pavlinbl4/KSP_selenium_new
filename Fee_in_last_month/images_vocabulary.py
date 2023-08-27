@@ -1,16 +1,20 @@
 import re
 
 
-def make_images_voc(images_links):
-    images_voc = {}
-    for i in images_links:
+def make_image_dict(image_links: list[str]) -> dict[str, str]:
+    image_dict = {}
+    for i in image_links:
+        # Extract KSP ID from image link
         ksp_id = re.findall(r'(?<=photocode=)\w{16}', str(i))[0]
+        # Extract photoid from image link
         regex = r'(?<=photoid=)\d{5,7}(?=\")'
         try:
             photoid = re.findall(regex, str(i))[0]
         except IndexError:
             print(str(i))
         else:
-            images_voc[photoid] = ksp_id
+            image_dict[photoid] = ksp_id
 
-    return images_voc
+    return image_dict
+
+# image_dict = {photoid:ksp_id for photoid, ksp_id in zip(photoids, ksp_ids)}
