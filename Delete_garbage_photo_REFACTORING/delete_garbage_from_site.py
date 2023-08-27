@@ -5,28 +5,14 @@ import time
 from selenium.webdriver.common.by import By
 from Common.authorization import autorization
 from Common.create_XLXS_report_file import create_report
+from Common.get_html import get_html_from_link
 from Common.regex_tools import make_text_edit_link
+from Common.selenium_tools import find_images_by_id
 from Common.soup_tools import get_image_links
 from Common.write_to_xlsx import write_to_xlsx
-from KSP_shoot_create.find_images import find_images_by_id
-from KSP_shoot_create.get_html import get_html_from_link
 import sys
 from selenium.common.exceptions import NoSuchElementException, NoSuchWindowException
 from Common.choose_input import chose_input
-
-
-# def get_image_links(html):
-#     soup = get_soup(html)
-#     table = soup.find_all('table')[9]
-#     tbody = table.find('tbody')
-#     return tbody.find_all(title="Добавить кадрировку")  # images_links
-
-
-# def make_text_edit_link(link):
-#     inner_id = re.findall(r'(?<=id=)\d+', link)[0]
-#     image_id = re.findall(r'(?<=photocode=)[^&]+', link)[0]
-#     image_edit_link = f'https://image.kommersant.ru/photo/archive/ViewPhoto.asp?ID={inner_id}&Lang=1&L=1'
-#     return image_edit_link, image_id, inner_id
 
 
 def main_modul():
