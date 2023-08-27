@@ -5,14 +5,19 @@ available when you press the button with the hammer and wrench icon.
 
 from Common.authorization import autorization
 from selenium.common.exceptions import NoSuchElementException
-
 from Common.lematization import lema
-from Common.regex_tools import replace_to_comma, keywords_opimization
+from Common.regex_tools import keywords_opimization
 from Common.save_info_in_csv import write_kp_files_keywords
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
+
+def add_new_keywords(concatinated_keywords):
+    if 'софт' in concatinated_keywords:
+        return concatinated_keywords + ", " + 'цифровизация'
+    if 'импортозамещение' in concatinated_keywords:
+        return concatinated_keywords + ", " + 'импортоопережение'
+    if "цифровизация" in concatinated_keywords:
+        return concatinated_keywords + ", " + 'компьютеризация'
 
 
 def set_keywords_to_site(good_keywords, driver):
@@ -58,7 +63,15 @@ def image_info_optimization(driver, text_edit_link):
     if keywords != '' and keywords is not None:
         write_kp_files_keywords(image_id, caption, keywords)  # save data in csv file
 
-        optimized_keywords = keywords_opimization(keywords)  # replace ; with comma
+        keywords_from_caption = ", ".join(lema(caption))
+
+        concatinated_keywords = keywords_from_caption + ", " + keywords  # concatinate keywords
+
+        add_new_keywords(concatinated_keywords)
+
+        # optimized_keywords = keywords_opimization(keywords)  # replace ; with comma
+        optimized_keywords = keywords_opimization(concatinated_keywords)  # replace ; with comma
+
         print(optimized_keywords)
 
         set_keywords_to_site(optimized_keywords, driver)  # write optimized keywords to site
