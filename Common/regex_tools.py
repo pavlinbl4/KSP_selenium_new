@@ -1,11 +1,9 @@
 import re
 
-from Keyword_optimization_REFACTORING.bad_words_from_file import get_bad_words_from_txt_file
-
-words_to_remove = r'_РЕЛИГИЯ|_гипермаркеты|_фирмы|_ПРЕДМЕТ_|_People|_ГОРОДА И СТРАНЫ_|_PERSONS|_CITY|_ИМЯ СОБСТВЕННОЕ_|COUNTRY|_РУССКИЙ_|_ГОРОДА И СТРАНЫ|\|'
+from Common.bad_words_job import get_bad_words_from_txt_file
 
 
-def get_file_extension(path_to_file:str)-> str:
+def get_file_extension(path_to_file: str) -> str:
     re_pattern = r'(?<=\.)[1A-Za-z]{3,4}'
     extension = re.findall(re_pattern, path_to_file)[0]
     return extension  # string with file extension
@@ -16,8 +14,18 @@ def extract_only_words(text_string):
         text_string = ''.join(text_string)
     pattern = r'[А-Яа-яA-Za-z]+\-*[А-Яа-яA-Za-z]+'
     return re.findall(pattern, text_string)
-def keywords_opimization(string, path_to_bad_words_file='/Users/evgeniy/Documents/keywords/bad_words.txt'):
-    words_to_remove = get_bad_words_from_txt_file(path_to_bad_words_file)
+
+
+def extract_words_no_digits(text_string):
+    if type(text_string) is list:
+        text_string = ''.join(text_string)
+    pattern = r'[А-Яа-яA-Za-z]+\-*[А-Яа-яA-Za-z]+'
+    return re.findall(pattern, text_string)
+
+
+def keywords_opimization(string):
+    words_to_remove = get_bad_words_from_txt_file('/Users/evgeniy/Documents/keywords/bad_words.txt')
+
     # remove bad words
     no_bad_words = re.sub(words_to_remove, "", string).strip()
 
@@ -40,6 +48,7 @@ def keywords_opimization(string, path_to_bad_words_file='/Users/evgeniy/Document
 
 
 def replace_to_comma(keywords: str) -> str:
+    words_to_remove = get_bad_words_from_txt_file('/Users/evgeniy/Documents/keywords/bad_words.txt')
     step_1 = re.sub(words_to_remove, '', keywords).strip()  # remove this words
     return re.sub(r';', ', ', step_1)
 
