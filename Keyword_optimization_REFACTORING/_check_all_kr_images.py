@@ -1,6 +1,5 @@
 from Common.authorization import autorization
-from KSP_shoot_create.find_images import find_images_by_id
-from Common.selenium_tools import check_keywords_number, images_rotator, end_selenium
+from Common.selenium_tools import check_keywords_number, images_rotator, end_selenium, find_images_by_id
 
 
 def main():
@@ -10,7 +9,7 @@ def main():
     # 2 find all my KR images
     find_images_by_id(shoot_id='', driver=driver)
 
-    # 3 take number of images from site
+    # 3 take number of images from site, if keyword empty - all images
     keyword_link, images_number = check_keywords_number(keyword='', driver=driver)
 
     # 4 check all find images
