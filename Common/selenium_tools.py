@@ -2,15 +2,37 @@ from Common.kp_image_info_page import image_info_optimization
 from Common.regex_tools import make_text_edit_link
 from Common.soup_tools import get_image_links
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 
 red = '\033[91m'
 green = '\33[32m'
 end = '\033[0m'
 
 
+def find_images_by_id(shoot_id, driver):  # авторизация гна главной странице
+
+    driver.find_element(By.CSS_SELECTOR, '#au').clear()
+    driver.find_element(By.CSS_SELECTOR, '#au').send_keys('Евгений Павленко')
+
+    driver.find_element(By.CSS_SELECTOR, '#code').clear()
+    driver.find_element(By.CSS_SELECTOR, '#code').send_keys(shoot_id)
+    driver.find_element(By.CSS_SELECTOR, '#lib0').click()
+    select = Select(driver.find_element(By.NAME, 'ps'))
+    select.select_by_value('100')
+    driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
+    link = driver.current_url
+    return link
+
+
 def end_selenium(driver):
     driver.close()
     driver.quit()
+
+
+def set_keywords_to_site(good_keywords, driver):
+    driver.find_element(By.NAME, 'KeywordsRus').clear()
+    driver.find_element(By.NAME, 'KeywordsRus').send_keys(good_keywords)
+    driver.find_element(By.NAME, 'Add').click()
 
 
 def go_my_images(link, keyword, driver) -> object:
@@ -37,12 +59,13 @@ def check_keywords_number(keyword, driver):  # take number of images from site
     return keyword_link, images_number
 
 
+# function to work with all images on all pages
 def images_rotator(images_number, keyword_link, driver):
     range_number = images_number // 100 + 2  # количиство страниц выданных поиском
     # for x in range(1, range_number):  # главный цикл работы программы
-    for x in range(172, range_number):  # главный цикл работы программы переход по страницам архива
+    for x in range(1, 100):  # главный цикл работы программы переход по страницам архива
         link = f'{keyword_link}2&pg={x}'
-        html = go_my_images(link, keyword='', driver=driver)  # получаю html  открытой страницы
+        html = go_my_images(link, keyword='', driver=driver)  # получаю html открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
         print(f'на странице {x} - {len(images_links)} снимков')
 
@@ -51,4 +74,5 @@ def images_rotator(images_number, keyword_link, driver):
             text_edit_link, image_id, inner_id = make_text_edit_link(
                 images_links[i].get('href'))  # generate edit image link
 
+            # optimise image info
             image_info_optimization(driver, text_edit_link)
