@@ -5,7 +5,6 @@
 from Common.selenium_tools import end_selenium
 from Fee_in_last_month.remove_folder import delete_folder
 from Fee_in_last_month.user_home_folder import home
-from Fee_in_last_month.what_month import month_number
 from published_images import autorization, select_today_published_images, change_photographer
 from check_published_images import one_day_images_cycle
 from images_links import get_image_links
