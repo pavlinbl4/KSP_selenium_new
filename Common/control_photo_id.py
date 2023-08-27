@@ -1,5 +1,4 @@
 import re
-import pyperclip
 from colorama import Fore
 
 
