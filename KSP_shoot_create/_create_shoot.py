@@ -6,9 +6,9 @@ from selenium.webdriver.common.by import By
 import pyperclip
 from Common.authorization import autorization
 from Common.notification import system_notification
-from KSP_shoot_create.add_category import select_category
-from KSP_shoot_create.checkbox_output import create_checkbox_dict
-from KSP_shoot_create.input_window import get_input_data
+from add_category import select_category
+from checkbox_output import create_checkbox_dict
+from input_window import get_input_data
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
