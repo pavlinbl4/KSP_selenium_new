@@ -1,6 +1,8 @@
-from Common.check_file_exist import create_file_if_not_exists
+
 import os
 import csv
+
+from Common.check_file_exist import create_file_if_not_exists
 
 
 def csv_writer(info, columns_name, csv_file_path):
