@@ -1,5 +1,4 @@
 from tkinter import filedialog, messagebox, Tk, Label, Button
-# import tkinter as tk
 from tkinter import font
 
 
@@ -46,5 +45,5 @@ def select_folder_via_gui():
 
 
 if __name__ == '__main__':
-    display_info("NO KEYWORDS FOR WORK")
-    # select_folder_via_gui()
+    # display_info("NO KEYWORDS FOR WORK")
+    select_folder_via_gui()
