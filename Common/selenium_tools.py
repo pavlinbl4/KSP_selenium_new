@@ -1,9 +1,12 @@
-from kp_image_info_page import image_info_optimization
-from make_page_link import make_history_link
-from regex_tools import make_text_edit_link
-from soup_tools import get_image_links
+from Common.kp_image_info_page import image_info_optimization
+from Common.make_page_link import make_history_link
+from Common.regex_tools import make_text_edit_link
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
+
+from Common.soup_tools import get_image_links
+import logging
 
 red = '\033[91m'
 green = '\33[32m'
@@ -58,20 +61,22 @@ def go_my_images(link, keyword, driver) -> object:
 
 def check_keywords_number(keyword, driver):  # take number of images from site
     try:
-        images_number = driver.find_element(By.CSS_SELECTOR,
-                                            'body > table:nth-child(6) > tbody:nth-child(1) > '
-                                            'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
-                                            'tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > '
-                                            'b:nth-child(1)')
-    except Exception as ex:
-        print(f'{red}снимков с ключевым словом {green}{keyword}{end}{red} не найденно{end}\n'
-              f'program terminated')
-        exit()
-    images_number = images_number.text
-    images_number = int(images_number.replace(' ', ''))  # удаляю возможные пробелы перед преобразованием в целое число
-    print(f'{green}{images_number} снимков с ключевым словом "{keyword}"{end}')
-    keyword_link = driver.current_url[:-1]
-    return keyword_link, images_number
+        images_number_element = driver.find_element(By.CSS_SELECTOR,
+                                                    'body > table:nth-child(6) > tbody:nth-child(1) > '
+                                                    'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
+                                                    'tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > '
+                                                    'b:nth-child(1)')
+
+        images_number_element = images_number_element.text
+        images_number = int(
+            images_number_element.replace(' ', ''))  # удаляю возможные пробелы перед преобразованием в целое число
+        print(f'{green}{images_number} снимков с ключевым словом "{keyword}"{end}')
+        logging.info(f'{images_number} снимков с ключевым словом "{keyword}"')
+        keyword_link = driver.current_url[:-1]
+        return keyword_link, images_number
+    except NoSuchElementException:
+        logging.error(f'снимков с ключевым словом "{keyword}" не найдено')
+        raise
 
 
 # function to work with all images on all pages
