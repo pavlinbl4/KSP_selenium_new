@@ -12,17 +12,7 @@ from Common.notification import system_notification
 from tkinter import filedialog
 from Common.soup_tools import get_image_links
 from Common.selenium_tools import go_my_images
-
-
-def select_folder():
-    choose_folder = filedialog.askdirectory(
-        initialdir='/Volumes/big4photo-4/EDITED_JPEG_ARCHIV/Downloaded_from_fotoagency',
-        title="Select your Source directory")
-    if len(choose_folder) > 0:
-        return choose_folder
-    else:
-        print("You don't choose folder. Program terminated")
-        exit()
+from Common.tk_tools import select_folder_via_gui
 
 
 def enable_download():
@@ -79,8 +69,8 @@ def find_images_on_site():  # авторизация гна главной ст�
 if __name__ == '__main__':
     shoot_id = input("input shoot id look like 'KSP_017***'\n")
     # shoot_id = "KMO_192663"
-    image_folder = select_folder()
-    # image_folder = '/Volumes/big4photo-4/EDITED_JPEG_ARCHIV/Downloaded_from_fotoagency'
+    image_folder = select_folder_via_gui()
+
     download_dir = f'{image_folder}/{shoot_id}'
     driver = autorization()
     shoot_link = find_images_on_site()  # авторизируюсь и получаю ссылку на данную съемку
