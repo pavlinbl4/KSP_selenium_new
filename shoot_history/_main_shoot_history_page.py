@@ -4,7 +4,7 @@ from Common.save_page_html import save_html_page, read_html
 from Common.selenium_tools import end_selenium, open_page, work_to_history
 from Common.write_xlsx import write_rename_voc
 from Common.make_page_link import make_page_link
-from _scrap_html import scrap_html, select_folder
+from scrap_html import scrap_html, select_folder
 
 path_to_file = '/Users/evgeniy/Documents/Kommersant/shoot_rename/shoot_story.xlsx'
 
