@@ -1,6 +1,5 @@
 import os
 import logging
-
 from Common.create_subfolder import create_directory
 
 logger = logging.getLogger(__name__)
@@ -17,7 +16,7 @@ def create_file_if_not_exists(folder, file_name):
     # Create file if  it doesn't exist
     if not os.path.exists(file_path):
         logger.info("Creating file %s", file_path)
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w'):
             pass
 
     return file_path
