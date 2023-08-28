@@ -3,7 +3,6 @@ from Common.save_info_in_csv import write_lost_files_info
 from exif_job import change_color_class
 from find_file_hdd import find_no_ext
 from colorama import Fore
-from tkinter import filedialog
 
 
 def check_original_file_name(original_file_name,
@@ -45,6 +44,5 @@ def scrap_html(page_link, path):
 
     return file_renames  # возвращает словарь переименованных снимков
 
-
-def select_folder():
-    return filedialog.askdirectory()
+# def select_folder():
+#     return filedialog.askdirectory()
