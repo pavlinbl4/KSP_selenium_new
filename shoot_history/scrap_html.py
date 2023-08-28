@@ -8,7 +8,8 @@ from tkinter import filedialog
 
 
 def check_original_file_name(original_file_name,
-                             my_date_format):  # проверяю был ли файл переименован по моим правилам или отправлен сразу с камеры
+                             my_date_format):
+    # проверяю был ли файл переименован по моим правилам или отправлен сразу с камеры
     if original_file_name.startswith("P"):
         original_file_name = my_date_format + original_file_name
     return original_file_name
