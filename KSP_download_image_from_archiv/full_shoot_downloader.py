@@ -5,7 +5,7 @@ from Common.choose_input import chose_input
 import time
 from selenium.webdriver.common.by import By
 from Common.regex_tools import full_shoot_html_link
-from Common.selenium_tools import page_html
+from Common.selenium_tools import go_my_images
 from Common.soup_tools import get_total_images
 
 
@@ -46,7 +46,9 @@ def main():
     shoot_id = chose_input()  # shoot_id = 'KSP_017892'
     page_link = full_shoot_html_link(shoot_id, page=0)
     driver = autorization()
-    html = page_html(driver, page_link)
+
+    html = go_my_images(page_link, driver=driver, keyword=[])
+
     total_images = get_total_images(html)  # number of images in shoot
     print(total_images)
 
