@@ -1,74 +1,57 @@
 """This script download all images from fresh KP shoot"""
 
 from Common.authorization import autorization
-from Common.choose_input import chose_input
+from Common.choose_input import clipboard_or_input
 import time
 from selenium.webdriver.common.by import By
-from Common.regex_tools import full_shoot_html_link
-from Common.selenium_tools import go_my_images
+
+from Common.regex_tools import full_shoot_html_link, create_add_image_link
+from Common.selenium_tools import page_source_from_selenium, end_selenium
 from Common.soup_tools import get_total_images
+from selenium.common.exceptions import NoSuchElementException
 
 
-def download_one_page(number_of_downloads, shoot_id, page_link, count, driver):
-    cgreen = '\33[0;32m'
-    cend = '\033[0m'
-    cred = '\033[91m'
-    print(f'number_of_downloads - {number_of_downloads}')
+def download_original_image(driver):
+    # Скачивание либо оригинал снимка или уже добавленного в архив
+    try:
+        driver.find_element(By.CSS_SELECTOR,
+                            "div.hi-subpanel:nth-child(3) > a:nth-child(4)").click()
+    except NoSuchElementException:
+        driver.find_element(By.CSS_SELECTOR,
+                            "#AddPhotoImageControl1 > div.hi-panel > div > a").click()
 
-    driver.get(page_link)
 
-    for x in range(number_of_downloads):  # number_of_downloads
-        index = ("0000" + str(count))[-5:]
-        count += 1
-        try:
-            new_window = driver.window_handles[0]
-            driver.switch_to.window(new_window)
-            driver.find_element(By.CSS_SELECTOR,
-                                f"#unselected_{shoot_id}_{index} > a.ui-icon.ui-icon-plus").click()
-            time.sleep(4)
+def rotate_all_images_in_shoot(total_images, shoot_id, driver):
+    # Перебираю все снимки в съемке
+    for count in range(1, total_images + 1):
+        add_image_link = create_add_image_link(shoot_id, count)
+        driver.get(add_image_link)
 
-            new_window = driver.window_handles[1]
-            driver.switch_to.window(new_window)
-            try:
-                driver.find_element(By.CSS_SELECTOR,
-                                    "div.hi-subpanel:nth-child(3) > a:nth-child(4)").click()
-            except:
-                driver.find_element(By.CSS_SELECTOR,
-                                    "#AddPhotoImageControl1 > div.hi-panel > div > a").click()
-            print(f'{cgreen}image {f"KSP_0{shoot_id}_{index}"} downloaded{cend}')
-
-            driver.close()
-        except Exception as ex:
-            print(f'image {cred}{f"KSP_0{shoot_id}_{index}"}{cend} not aviable')
+        # here can be any action with on add image page
+        download_original_image(driver)
 
 
 def main():
-    shoot_id = chose_input()  # shoot_id = 'KSP_017892'
-    page_link = full_shoot_html_link(shoot_id, page=0)
+    # get shoot id
+    shoot_id = clipboard_or_input()  # shoot_id = 'KSP_017892'
+
+    #  generate html link "просмотр съемки"
+    full_shoot_page_link = full_shoot_html_link(shoot_id, page=0)
+
+    # autorization on site
     driver = autorization()
 
-    html = go_my_images(page_link, driver=driver, keyword=[])
+    html = page_source_from_selenium(full_shoot_page_link, driver=driver, keyword=[])
 
     total_images = get_total_images(html)  # number of images in shoot
-    print(total_images)
 
-    count = 1
-    if total_images <= 200:  # если количество снимков меньше 200 ( количество снимков на странице
-        number_of_downloads = total_images  # количество скачиваний на странице с 200 картинками будет такое
-        page = 1  # номер страницы с которой выкачиваю фото
-        download_one_page(number_of_downloads, shoot_id, page_link, count, driver)
-        # browser.close()
-        driver.quit()
+    # Основная функция которая перебирает все снимки в съемки
+    rotate_all_images_in_shoot(total_images, shoot_id, driver)
 
-    else:  # если больше 200 снимков, то нужно будет открывать новые страницы
-        pages_number = total_images // 200
-        for page in range(1, pages_number + 2):
-            if page != pages_number + 1:
-                number_of_downloads = 200
-            else:
-                number_of_downloads = total_images % 200
-            download_one_page(number_of_downloads, shoot_id, page, count, driver)
-    print(f"скачивание завершено")
+    # Задержка для ожидания окончательной загрузки всех снимков
+    time.sleep(5)
+
+    end_selenium(driver)
 
 
 if __name__ == '__main__':
