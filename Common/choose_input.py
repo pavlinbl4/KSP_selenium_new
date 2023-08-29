@@ -7,12 +7,12 @@ green = '\33[32m'
 end = '\033[0m'
 
 
-def chose_input():
+def clipboard_or_input():
     data = pyperclip.paste()
     print(f'Do you want to use {red}{data}{end}?\n'
           f'Press {green}"ENTER"{end} if {green}"YES"{end} or type you data')
     answer = input()
-    return answer if len(answer) > 2 else data
+    return answer if len(answer) > 2 else data.strip()
 
 
 
