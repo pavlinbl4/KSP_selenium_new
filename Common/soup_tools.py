@@ -12,7 +12,8 @@ def get_image_links(html):
     return images_links
 
 
-def get_total_images(html):  # get number of images in shoot
+def get_total_images(html):
+    # get number of images in shoot from "просмотр съемки" page
     soup = BeautifulSoup(html, 'lxml')
     total_images = soup.find('span', id='ctl00_MainContent_AllPhoto1').text
     total_images = int(re.findall(r'\d+', total_images)[0])  # количество файлов в съемке
