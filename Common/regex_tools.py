@@ -53,6 +53,13 @@ def replace_to_comma(keywords: str) -> str:
     return re.sub(r';', ', ', step_1)
 
 
+def create_add_image_link(shoot_id: str, count: int) -> str:
+    #  Создаю ссылку окна браузера добавление снимки в архив
+    count_str = str(count).zfill(5)
+    return f'https://image.kommersant.ru/photo/wp/AddPhotoTask.aspx?photocode=' \
+           f'{shoot_id}_{count_str}&filename={shoot_id}_{count_str}'
+
+
 def make_text_edit_link(link):
     inner_id = re.findall(r'(?<=id=)\d+', link)[0]
     image_id = re.findall(r'(?<=photocode=)[^&]+', link)[0]
@@ -61,7 +68,8 @@ def make_text_edit_link(link):
     return image_edit_link, image_id, inner_id
 
 
-def full_shoot_html_link(shoot_id: str, page: int) -> str:  # create full shoot html link with 200 preview
+def full_shoot_html_link(shoot_id: str, page: int) -> str:
+    # create full shoot html link with 200 preview (Так называемый "просмотр съемки")
     splited_soot_id = shoot_id.split('_')
     return f'https://image.kommersant.ru/photo/wp/default.aspx?shootnum={splited_soot_id[1]}' \
            f'&sourcecode={splited_soot_id[0]}&pagesize=200&previewsize=128&page={str(page)}&nl=true&ord=F'
@@ -73,3 +81,5 @@ if __name__ == '__main__':
     print(
         f"{'keywords_opimization'}: "
         f"{keywords_opimization('Санкт-Петербург, Петрикирхе;архитектура;религия, архитектура')}")
+
+    print(full_shoot_html_link('KSP_017945', 1))
