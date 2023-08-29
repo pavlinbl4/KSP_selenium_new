@@ -53,10 +53,9 @@ def set_keywords_to_site(good_keywords, driver):
     driver.find_element(By.NAME, 'Add').click()
 
 
-def go_my_images(link, keyword, driver) -> object:
+def page_source_from_selenium(link, keyword, driver) -> object:
     driver.get(link)
-    html = driver.page_source
-    return html
+    return driver.page_source
 
 
 def check_keywords_number(keyword, driver):  # take number of images from site
@@ -85,7 +84,7 @@ def images_rotator(images_number, keyword_link, driver):
     # for x in range(1, range_number):  # главный цикл работы программы
     for x in range(1, 100):  # главный цикл работы программы переход по страницам архива
         link = f'{keyword_link}2&pg={x}'
-        html = go_my_images(link, keyword='', driver=driver)  # получаю html открытой страницы
+        html = page_source_from_selenium(link, keyword='', driver=driver)  # получаю html открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
         print(f'на странице {x} - {len(images_links)} снимков')
 
