@@ -17,6 +17,7 @@ def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
 
     shoot_caption = get_input_data()  # add caption via GUI
+    pyperclip.copy(shoot_caption)
     category_number = create_checkbox_dict()  # select category from GUI
     driver = autorization()
     try:
