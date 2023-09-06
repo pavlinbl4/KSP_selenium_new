@@ -8,7 +8,7 @@ from colorama import Fore
 def check_original_file_name(original_file_name,
                              my_date_format):
     # проверяю был ли файл переименован по моим правилам или отправлен сразу с камеры
-    if original_file_name.startswith("P"):
+    if original_file_name.startswith("E") or original_file_name.startswith("P"):
         original_file_name = my_date_format + original_file_name
     return original_file_name
 
@@ -43,6 +43,3 @@ def scrap_html(page_link, path):
                 write_lost_files_info(original_file_name, photo_id)
 
     return file_renames  # возвращает словарь переименованных снимков
-
-# def select_folder():
-#     return filedialog.askdirectory()
