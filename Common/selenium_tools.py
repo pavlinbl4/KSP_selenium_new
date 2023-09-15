@@ -29,8 +29,8 @@ def work_to_history(driver):
 
 def find_images_by_id(shoot_id, driver):  # авторизация гна главной странице
 
-    driver.find_element(By.CSS_SELECTOR, '#au').clear()
-    driver.find_element(By.CSS_SELECTOR, '#au').send_keys('Евгений Павленко')
+    # driver.find_element(By.CSS_SELECTOR, '#au').clear()
+    # driver.find_element(By.CSS_SELECTOR, '#au').send_keys('Евгений Павленко')
 
     driver.find_element(By.CSS_SELECTOR, '#code').clear()
     driver.find_element(By.CSS_SELECTOR, '#code').send_keys(shoot_id)
