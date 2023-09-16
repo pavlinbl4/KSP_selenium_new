@@ -4,7 +4,7 @@ from Common.crome_options import setting_chrome_options
 from Common.credentials import get_credentials
 
 
-def autorization():
+def authorization():
     driver = webdriver.Chrome(options=setting_chrome_options())
     login, password, first_loggin = get_credentials()
     driver.get(first_loggin)
@@ -17,4 +17,4 @@ def autorization():
 
 
 if __name__ == '__main__':
-    autorization()
+    authorization()
