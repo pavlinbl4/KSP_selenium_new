@@ -1,3 +1,4 @@
+from Common.authorization import authorization
 from Common.kp_image_info_page import image_info_optimization
 from Common.make_page_link import make_history_link
 from Common.regex_tools import make_text_edit_link
@@ -27,19 +28,50 @@ def work_to_history(driver):
     return driver.page_source
 
 
-def find_images_by_id(shoot_id, driver):  # авторизация гна главной странице
+# def find_images_by_id_only_in_kr(shoot_id, driver):
+#     # find images only in KR and KV archiv
+#
+#     driver.find_element(By.CSS_SELECTOR, '#code').clear()
+#     driver.find_element(By.CSS_SELECTOR, '#code').send_keys(shoot_id)
+#
+#     # uncheck KP images for search
+#     driver.find_element(By.CSS_SELECTOR, '#lib0').click()
+#
+#     # set view 100 images in browser
+#     select = Select(driver.find_element(By.NAME, 'ps'))
+#     select.select_by_value('100')
+#
+#     # click search  button
+#     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
+#     link = driver.current_url
+#     return link
 
-    # driver.find_element(By.CSS_SELECTOR, '#au').clear()
-    # driver.find_element(By.CSS_SELECTOR, '#au').send_keys('Евгений Павленко')
 
+def find_all_images_on_site_by_shoot_id_or_keyword(driver, shoot_id='', keyword='', only_kr=True):
+    # send shoot id in its field
     driver.find_element(By.CSS_SELECTOR, '#code').clear()
-    driver.find_element(By.CSS_SELECTOR, '#code').send_keys(shoot_id)
-    driver.find_element(By.CSS_SELECTOR, '#lib0').click()
+    driver.find_element(By.CSS_SELECTOR, '#code').send_keys(shoot_id)  # ввожу номер съемки
+
+    # find by keyword
+    driver.find_element(By.CSS_SELECTOR, '#text').send_keys(keyword)
+
+    # set photographer
+    driver.find_element(By.CSS_SELECTOR, '#au').send_keys('Евгений Павленко')
+
+    # set view 100 images in browser
     select = Select(driver.find_element(By.NAME, 'ps'))
     select.select_by_value('100')
+
+    if only_kr:
+        # uncheck KP images for search
+        driver.find_element(By.CSS_SELECTOR, '#lib0').click()
+
+    # click search  button
     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
-    link = driver.current_url
-    return link
+
+    images_number = number_of_founded_images(keyword, driver)
+
+    return driver.current_url[:-1], images_number  # return shoot link
 
 
 def end_selenium(driver):
@@ -58,21 +90,25 @@ def page_source_from_selenium(link, keyword, driver) -> object:
     return driver.page_source
 
 
-def check_keywords_number(keyword, driver):  # take number of images from site
-    try:
-        images_number_element = driver.find_element(By.CSS_SELECTOR,
-                                                    'body > table:nth-child(6) > tbody:nth-child(1) > '
-                                                    'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
-                                                    'tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > '
-                                                    'b:nth-child(1)')
+def get_images_count_element(driver):
+    # get information from field with amount of founded images
+    return driver.find_element(By.CSS_SELECTOR,
+                               'body > table:nth-child(6) > tbody:nth-child(1) > '
+                               'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
+                               'tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > '
+                               'b:nth-child(1)')
 
-        images_number_element = images_number_element.text
-        images_number = int(
-            images_number_element.replace(' ', ''))  # удаляю возможные пробелы перед преобразованием в целое число
-        print(f'{green}{images_number} снимков с ключевым словом "{keyword}"{end}')
-        logging.info(f'{images_number} снимков с ключевым словом "{keyword}"')
-        keyword_link = driver.current_url[:-1]
-        return keyword_link, images_number
+
+def number_of_founded_images(keyword, driver):
+    # take number of images from site
+    try:
+        images_count_element = get_images_count_element(driver)
+
+        images_count_text = images_count_element.text
+        images_count = int(images_count_text.replace(' ', ''))
+        print(f'{green}{images_count} снимков с ключевым словом "{keyword}"{end}')
+        logging.info(f'{images_count} снимков с ключевым словом "{keyword}"')
+        return images_count
     except NoSuchElementException:
         logging.error(f'снимков с ключевым словом "{keyword}" не найдено')
         raise
@@ -95,3 +131,11 @@ def images_rotator(images_number, keyword_link, driver):
 
             # optimise image info
             image_info_optimization(driver, text_edit_link)
+
+
+if __name__ == '__main__':
+    t_driver = authorization()
+    # check_keywords_number('велосипед', t_driver)
+    print(find_all_images_on_site_by_shoot_id_or_keyword(t_driver, '', 'крокодил', only_kr=True))
+
+    # end_selenium(t_driver)
