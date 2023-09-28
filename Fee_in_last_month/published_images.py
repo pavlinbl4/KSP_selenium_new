@@ -46,6 +46,7 @@ def autorization(photographer):  # авторизация на главной с
     password_input.send_keys(password)
     driver.find_element(By.CSS_SELECTOR, ".system input.but").click()
     driver.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
+    return driver
 
 def change_photographer(photographer):
     driver.get(first_loggin)
