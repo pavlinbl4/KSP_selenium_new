@@ -13,8 +13,9 @@ def csv_writer(info, columns_name, csv_file_path):
     if os.path.exists(csv_file_path):
         write_csv_file(info, csv_file_path)
     else:
-        info = columns_name
+        write_csv_file(columns_name, csv_file_path)
         write_csv_file(info, csv_file_path)
+
 
 
 def write_lost_files_info(original_file_name, photo_id):
@@ -33,4 +34,9 @@ def write_kp_files_keywords(image_id, caption, keywords):
 
 if __name__ == '__main__':
     # write_lost_files_info('XXX', 'YYY')
-    write_kp_files_keywords('fgfgffg', '444444444', 'fgfgfgf, 7777')
+    # write_kp_files_keywords('fgfgffg', '444444444', 'fgfgfgf, 7777')
+    csv_writer(
+        ("Pupkin3", 555),
+        ('photographer','publications_in_month'),
+        '/Volumes/big4photo/Documents/Kommersant/analiz.csv'
+    )
