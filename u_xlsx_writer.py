@@ -1,4 +1,4 @@
-import sys
+
 
 import openpyxl
 from pathlib import Path
@@ -48,7 +48,7 @@ def write_to_cell(ws, row_line, column_number, cell_data):
     cell.value = cell_data
 
 
-def universal_xlsx_writer(columns_names, data_in_list, file_path, sheet_name, column_number):
+def universal_xlsx_writer(columns_names, file_path, sheet_name, row_line, column_number, cell_data):
     # Create the file if it doesn't exist yet
     if not Path(file_path).is_file():
         wb = openpyxl.Workbook()
@@ -68,7 +68,7 @@ def universal_xlsx_writer(columns_names, data_in_list, file_path, sheet_name, co
     ws = wb[sheet_name]
     write_column_headers(ws, columns_names)
 
-    write_to_cell(6, 4, 'date in selected cell')
+    write_to_cell(ws, row_line, column_number,cell_data)
 
     wb.save(file_path)
 
@@ -81,5 +81,13 @@ if __name__ == '__main__':
     list_data_t = [44, 74444, 33, 7777]  # only for writing by rows
     sheet_name_t = '2'
     column_number_t = 2
+    cell_data_t = 'gjksgeggjw'
 
-    universal_xlsx_writer(columns_n, list_data_t, '/Users/evgeniy/Documents/test33.xlsx', sheet_name_t, column_number_t)
+    universal_xlsx_writer(columns_names=columns_n,
+                          file_path='/Users/evgeniy/Documents/test33.xlsx',
+                          sheet_name=sheet_name_t,
+                          row_line=7,
+                          column_number=7,
+                          cell_data='7x7'
+                          )
+    # def universal_xlsx_writer(columns_names, file_path, sheet_name, row_line, column_number, cell_data):
