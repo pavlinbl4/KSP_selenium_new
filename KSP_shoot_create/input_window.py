@@ -43,7 +43,10 @@ def get_input_data():
     # Start the main event loop for the window
     input_window.mainloop()
 
-    input_text = input_field.bind('<Control-v>', paste)
+    # input_text = input_field.bind('<Control-v>', paste)
+
+    # Bind paste keyboard shortcut
+    input_field.bind('<Control-v>', lambda e: input_field.event_generate('<<Paste>>'))
 
     # Get the entered data from the input field
     input_text = input_field.get("1.0",'end-1c')

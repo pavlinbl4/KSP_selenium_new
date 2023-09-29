@@ -3,8 +3,10 @@
 2. "засланное" изображение не всегда опубликовано, нужно проверить это отдельно
 """
 from Common.selenium_tools import end_selenium
+from Common.write_to_csv import csv_writer
 from Fee_in_last_month.remove_folder import delete_folder
 from Fee_in_last_month.user_home_folder import home
+from ai_exel_writer import universal_xlsx_writer
 from published_images import autorization, select_today_published_images, change_photographer
 from check_published_images import one_day_images_cycle
 from images_links import get_image_links
@@ -17,7 +19,7 @@ from date_with_custom_month import custom_month_date
 import time
 
 
-def main_modul(photographer: str, month_n_int: int):
+def main_modul(photographer: str, month_n_int: int,):
     months_name, check_date, days_in_month, current_year = custom_month_date(month_n_int)
 
     # 2. нужно пройтись по всем дням месяца и получить данные о "засланных" снимках
@@ -52,35 +54,59 @@ def main_modul(photographer: str, month_n_int: int):
                                      photographer)
         print(f'{i} - {count = }')
 
+    # save data about publication count to all cameraman
+    csv_writer(
+        (photographer, count),
+        ('Фотограф', 'Количество опубликованных снимков'),
+        f'/Volumes/big4photo/Documents/Kommersant/analiz_{months_name}.csv'
+    )
+    mont_photographer_dict = {photographer: count}
+
+    universal_xlsx_writer(("Month",
+                           'Евгений Павленко',
+                  'Александр Коряков',
+                  'Александр Петросян'),
+                          [months_name,
+                           mont_photographer_dict['Евгений Павленко'],
+                           mont_photographer_dict['Александр Коряков'],
+                           mont_photographer_dict['Александр Петросян']],
+                          '/Volumes/big4photo/Documents/Kommersant/analiz_.xlsx',
+                          'sheet_NAME')
+
     delete_folder(html_folder)  # delete folder with html files
 
 
 if __name__ == '__main__':
     # month_n_int = month_number()  # int(input('input months number'))
-    autorization('Евгений Павленко')
+    driver = autorization('Евгений Павленко')
 
-    camera_men = [
-        'Евгений Павленко',
-        'Марина Мамонтова',
-        'Игорь Евдокимов',
-        'Александр Чиженок',
-        'Майя Жинкина',
-        'Александр Петросян',
-        'Александр Коряков',
-        'Александр Казаков',
-        'Дмитрий Духанин',
-        'Алексей Смагин',
-        'Глеб Щелкунов',
-        'Роман Яровицын',
-        'Александр Миридонов',
-        'Анатолий Жданов',
-        'Юрий Стрелец',
-        'Дмитрий Лебедев',
-        'Алексей Смышляев',
-    ]
+    # camera_men = [
+    #     'Евгений Павленко',
+    #     'Марина Мамонтова',
+    #     'Игорь Евдокимов',
+    #     'Александр Чиженок',
+    #     'Майя Жинкина',
+    #     'Александр Петросян',
+    #     'Александр Коряков',
+    #     'Александр Казаков',
+    #     'Дмитрий Духанин',
+    #     'Алексей Смагин',
+    #     'Глеб Щелкунов',
+    #     'Роман Яровицын',
+    #     'Александр Миридонов',
+    #     'Анатолий Жданов',
+    #     'Юрий Стрелец',
+    #     'Дмитрий Лебедев',
+    #     'Алексей Смышляев',
+    # ]
+    camera_men = ['Евгений Павленко',
+                  'Александр Коряков',
+                  'Александр Петросян']
 
 
     for photic in camera_men:
         print(f"{photic = }")
-        main_modul(photographer=photic, month_n_int=7)
-    end_selenium()
+        main_modul(photographer=photic, month_n_int=9,)
+
+    end_selenium(driver)
+

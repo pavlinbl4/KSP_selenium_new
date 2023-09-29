@@ -1,7 +1,20 @@
+import openpyxl
 from openpyxl import load_workbook
 import string
-from openpyxl.styles import Font, Color, Alignment
+from openpyxl.styles import Font
 
+def write_to_xlsx(image_id, action, shoot_id, count, path_to_file):
+    wb = openpyxl.load_workbook(path_to_file, read_only=False)
+
+    sheet = wb[shoot_id]
+
+    sheet.cell(row=3 + count, column=1).alignment = Alignment(horizontal='center')
+    sheet.cell(row=3 + count, column=1).font = Font(size=12, bold=True)
+    sheet.cell(row=3 + count, column=1).value = image_id
+    sheet.cell(row=3 + count, column=2).alignment = Alignment(wrap_text=True, horizontal='center')
+    sheet.cell(row=3 + count, column=2).value = action
+
+    wb.save(path_to_file)
 
 
 def write_n_rows(ws, last_line, image_info):
@@ -17,9 +30,13 @@ def write_to_file(path_to_file, image_info, last_line, report_date):
     wb.save(path_to_file)
 
 
-def write_xlsx_single_sheet(path_to_file, image_info):
+def write_xlsx_single_sheet(path_to_file, image_info, photographer):
     wb = load_workbook(path_to_file)
-    ws = wb.active
+    if photographer not in wb.sheetnames:
+        ws = wb.create_sheet(photographer)
+    else:
+        ws = wb[photographer]
+    # ws = wb[photographer]
     last_line = ws.max_row
     write_n_rows(ws, last_line, image_info)
     wb.save(path_to_file)
