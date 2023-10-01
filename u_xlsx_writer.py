@@ -1,5 +1,3 @@
-
-
 import openpyxl
 from pathlib import Path
 import string
@@ -42,13 +40,15 @@ def write_list_to_column(ws, column_data):
         cell.value = cell_value
 
 
-def write_to_cell(ws, row_line, column_number, cell_data):
+def write_to_cell(ws, row_line, column_number, cell_data, photographer):
+    cell = ws.cell(row=row_line + 1, column=1)
+    cell.value = photographer
     cell = ws.cell(row=row_line + 1, column=column_number + 1)
     ws.cell(row=row_line + 1, column=column_number + 1).alignment = Alignment(wrap_text=True, horizontal='center')
     cell.value = cell_data
 
 
-def universal_xlsx_writer(columns_names, file_path, sheet_name, row_line, column_number, cell_data):
+def universal_xlsx_writer(photographer, columns_names, file_path, sheet_name, row_line, column_number, cell_data ):
     # Create the file if it doesn't exist yet
     if not Path(file_path).is_file():
         wb = openpyxl.Workbook()
@@ -68,7 +68,7 @@ def universal_xlsx_writer(columns_names, file_path, sheet_name, row_line, column
     ws = wb[sheet_name]
     write_column_headers(ws, columns_names)
 
-    write_to_cell(ws, row_line, column_number,cell_data)
+    write_to_cell(ws, row_line, column_number, cell_data, photographer)
 
     wb.save(file_path)
 
@@ -83,11 +83,13 @@ if __name__ == '__main__':
     column_number_t = 2
     cell_data_t = 'gjksgeggjw'
 
-    universal_xlsx_writer(columns_names=columns_n,
+    universal_xlsx_writer(photographer='Pupkin',
+                          columns_names=columns_n,
                           file_path='/Users/evgeniy/Documents/test33.xlsx',
                           sheet_name=sheet_name_t,
                           row_line=7,
                           column_number=7,
                           cell_data='7x7'
+
                           )
     # def universal_xlsx_writer(columns_names, file_path, sheet_name, row_line, column_number, cell_data):
