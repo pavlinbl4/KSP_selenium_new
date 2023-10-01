@@ -3,10 +3,8 @@
 2. "засланное" изображение не всегда опубликовано, нужно проверить это отдельно
 """
 from Common.selenium_tools import end_selenium
-from Common.write_to_csv import csv_writer
 from Fee_in_last_month.remove_folder import delete_folder
 from Fee_in_last_month.user_home_folder import home
-from ai_exel_writer import universal_xlsx_writer
 from published_images import autorization, select_today_published_images, change_photographer
 from check_published_images import one_day_images_cycle
 from images_links import get_image_links
@@ -18,8 +16,10 @@ from datetime import datetime
 from date_with_custom_month import custom_month_date
 import time
 
+from u_xlsx_writer import universal_xlsx_writer
 
-def main_modul(photographer: str, month_n_int: int,):
+
+def main_modul(photic_index, photographer: str, month_n_int: int):
     months_name, check_date, days_in_month, current_year = custom_month_date(month_n_int)
 
     # 2. нужно пройтись по всем дням месяца и получить данные о "засланных" снимках
@@ -43,6 +43,7 @@ def main_modul(photographer: str, month_n_int: int,):
             file.write(html)
 
     # 4 перебираю сохраненные страницы
+    time.sleep(180)
     count = 0  # счетчик засланных снимков за весь месяц
     list_of_html = os.listdir(html_folder)
     for i in list_of_html:
@@ -54,26 +55,24 @@ def main_modul(photographer: str, month_n_int: int,):
                                      photographer)
         print(f'{i} - {count = }')
 
-    # save data about publication count to all cameraman
-    csv_writer(
-        (photographer, count),
-        ('Фотограф', 'Количество опубликованных снимков'),
-        f'/Volumes/big4photo/Documents/Kommersant/analiz_{months_name}.csv'
-    )
-    mont_photographer_dict = {photographer: count}
 
-    universal_xlsx_writer(("Month",
-                           'Евгений Павленко',
-                  'Александр Коряков',
-                  'Александр Петросян'),
-                          [months_name,
-                           mont_photographer_dict['Евгений Павленко'],
-                           mont_photographer_dict['Александр Коряков'],
-                           mont_photographer_dict['Александр Петросян']],
-                          '/Volumes/big4photo/Documents/Kommersant/analiz_.xlsx',
-                          'sheet_NAME')
+    columns_n = (
+        'Name', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+        'November', 'December')
+
+    universal_xlsx_writer(photographer,
+                          columns_names=columns_n,
+                          file_path='/Users/evgeniy/Documents/Kommersant/FEE/report.xlsx',
+                          sheet_name="2023",
+                          row_line=photic_index,
+                          column_number=month_n_int,
+                          cell_data=count
+
+                          )
 
     delete_folder(html_folder)  # delete folder with html files
+
+    return count, months_name
 
 
 if __name__ == '__main__':
@@ -99,14 +98,34 @@ if __name__ == '__main__':
     #     'Дмитрий Лебедев',
     #     'Алексей Смышляев',
     # ]
-    camera_men = ['Евгений Павленко',
-                  'Александр Коряков',
-                  'Александр Петросян']
 
+    for i in range(8, 10):
+        # camera_men = ('Евгений Павленко',
+        #               'Александр Коряков',
+        #               'Александр Петросян')
+        camera_men = [
+            'Евгений Павленко',
+            'Владислав Лоншаков',
+            'Василий Дерюгин',
+            'Максим Кимерлинг',
+            'Александр Петросян',
+            'Александр Коряков',
+            'Александр Казаков',
+            'Дмитрий Духанин',
+            'Алексей Смагин',
+            'Глеб Щелкунов',
+            'Роман Яровицын',
+            'Александр Миридонов',
+            'Анатолий Жданов',
+            'Юрий Стрелец',
+            'Дмитрий Лебедев',
+            'Олег Харсеев',
+        ]
 
-    for photic in camera_men:
-        print(f"{photic = }")
-        main_modul(photographer=photic, month_n_int=9,)
+        for photic_index, photic in enumerate(camera_men, 2):
+            count, months_name = main_modul(photic_index, photographer=photic, month_n_int=i)
+            time.sleep(60)
+
+            # в результате имеем фотографа и количество публикация за месяц
 
     end_selenium(driver)
-
