@@ -1,3 +1,5 @@
+from selenium.webdriver.support.wait import WebDriverWait
+
 from Common.authorization import authorization
 from Common.kp_image_info_page import image_info_optimization
 from Common.make_page_link import make_history_link
@@ -5,6 +7,7 @@ from Common.regex_tools import make_text_edit_link
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support import expected_conditions as EC
 
 from Common.soup_tools import get_image_links
 import logging
@@ -12,6 +15,17 @@ import logging
 red = '\033[91m'
 green = '\33[32m'
 end = '\033[0m'
+
+def select_category(category_number, driver):
+    wait = WebDriverWait(driver, 10)
+    driver.execute_script("OpenPopupWindow('ShootSubjectsAdmin.asp')")
+    wait.until(EC.number_of_windows_to_be(2))
+    driver.switch_to.window(driver.window_handles[1])
+    category = Select(driver.find_element(By.ID, 'SubjectID'))
+    category.select_by_value(category_number)
+    driver.find_element(By.XPATH, '//*[@id="addrow"]').click()
+    driver.find_element(By.XPATH, '//*[@id="DivSubmit"]/input[1]').click()
+    return driver
 
 
 def open_page(page_link, browser):
