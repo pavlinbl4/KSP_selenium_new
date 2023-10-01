@@ -4,9 +4,9 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import pyperclip
-from Common.authorization import autorization
+from Common.authorization import authorization
 from Common.notification import system_notification
-from add_category import select_category
+from Common.selenium_tools import select_category
 from checkbox_output import create_checkbox_dict
 from input_window import get_input_data
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,9 +17,9 @@ def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
 
     shoot_caption = get_input_data()  # add caption via GUI
-    pyperclip.copy(shoot_caption)
+    pyperclip.copy(shoot_caption) # backup text to clipboard
     category_number = create_checkbox_dict()  # select category from GUI
-    driver = autorization()
+    driver = authorization()
     try:
 
         driver.find_element(By.CSS_SELECTOR,
