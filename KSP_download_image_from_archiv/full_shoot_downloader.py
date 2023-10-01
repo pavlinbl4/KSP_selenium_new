@@ -1,14 +1,18 @@
 """This script download all images from fresh KP shoot"""
 
-from Common.authorization import autorization
-from Common.choose_input import clipboard_or_input
+from Common.authorization import authorization
+
 import time
 from selenium.webdriver.common.by import By
 
+from Common.choose_input import chose_input
+from Common.download_to_selected_folder import enable_download
 from Common.regex_tools import full_shoot_html_link, create_add_image_link
 from Common.selenium_tools import page_source_from_selenium, end_selenium
 from Common.soup_tools import get_total_images
 from selenium.common.exceptions import NoSuchElementException
+
+from Common.tk_tools import select_folder_via_gui
 
 
 def download_original_image(driver):
@@ -33,13 +37,19 @@ def rotate_all_images_in_shoot(total_images, shoot_id, driver):
 
 def main():
     # get shoot id
-    shoot_id = clipboard_or_input()  # shoot_id = 'KSP_017892'
+    shoot_id = chose_input()  # shoot_id = 'KSP_017892'
 
     #  generate html link "просмотр съемки"
     full_shoot_page_link = full_shoot_html_link(shoot_id, page=0)
 
-    # autorization on site
-    driver = autorization()
+
+    # select folder to download images
+    image_folder = select_folder_via_gui()
+    download_dir = f'{image_folder}/{shoot_id}'
+
+    # authorization on site and enable selected download folder
+    driver = authorization()
+    enable_download(driver, download_dir)
 
     html = page_source_from_selenium(full_shoot_page_link, driver=driver, keyword=[])
 
@@ -49,7 +59,7 @@ def main():
     rotate_all_images_in_shoot(total_images, shoot_id, driver)
 
     # Задержка для ожидания окончательной загрузки всех снимков
-    time.sleep(5)
+    time.sleep(10)
 
     end_selenium(driver)
 
