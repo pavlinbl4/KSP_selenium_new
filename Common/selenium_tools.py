@@ -28,25 +28,6 @@ def work_to_history(driver):
     return driver.page_source
 
 
-# def find_images_by_id_only_in_kr(shoot_id, driver):
-#     # find images only in KR and KV archiv
-#
-#     driver.find_element(By.CSS_SELECTOR, '#code').clear()
-#     driver.find_element(By.CSS_SELECTOR, '#code').send_keys(shoot_id)
-#
-#     # uncheck KP images for search
-#     driver.find_element(By.CSS_SELECTOR, '#lib0').click()
-#
-#     # set view 100 images in browser
-#     select = Select(driver.find_element(By.NAME, 'ps'))
-#     select.select_by_value('100')
-#
-#     # click search  button
-#     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
-#     link = driver.current_url
-#     return link
-
-
 def find_all_images_on_site_by_shoot_id_or_keyword(driver, shoot_id='', keyword='', only_kr=True):
     # send shoot id in its field
     driver.find_element(By.CSS_SELECTOR, '#code').clear()
