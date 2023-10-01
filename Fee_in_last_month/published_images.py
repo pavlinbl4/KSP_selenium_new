@@ -37,7 +37,6 @@ def check_id_image(image_id):
     return driver.page_source
 
 
-
 def autorization(photographer):  # авторизация на главной странице
     driver.get(first_loggin)
     login_input = driver.find_element(By.ID, "login")
@@ -48,9 +47,14 @@ def autorization(photographer):  # авторизация на главной с
     driver.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
     return driver
 
+
 def change_photographer(photographer):
     driver.get(first_loggin)
-    driver.find_element(By.CSS_SELECTOR, '#au').clear()
+    photographer_name_field = driver.find_element(By.CSS_SELECTOR, '#au')
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(photographer_name_field))
+    photographer_name_field.clear()
+    # driver.find_element(By.CSS_SELECTOR, '#au').clear()
+    # photographer_name_field().send_keys(photographer)
     driver.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
 
 
