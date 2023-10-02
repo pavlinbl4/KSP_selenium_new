@@ -19,7 +19,7 @@ import time
 from u_xlsx_writer import universal_xlsx_writer
 
 
-def main_modul(photic_index, photographer: str, month_n_int: int):
+def main_modul( photographer: str, month_n_int: int):
     months_name, check_date, days_in_month, current_year = custom_month_date(month_n_int)
 
     # 2. нужно пройтись по всем дням месяца и получить данные о "засланных" снимках
@@ -54,7 +54,6 @@ def main_modul(photic_index, photographer: str, month_n_int: int):
         count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', i)[0], path_to_file, count,
                                      photographer)
         print(f'{i} - {count = }')
-
 
     columns_n = (
         'Name', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
@@ -123,8 +122,8 @@ if __name__ == '__main__':
         ]
 
         for photic_index, photic in enumerate(camera_men, 2):
-            count, months_name = main_modul(photic_index, photographer=photic, month_n_int=i)
-            time.sleep(60)
+            count, months_name = main_modul( photographer=photic, month_n_int=i)
+            # time.sleep(60)
 
             # в результате имеем фотографа и количество публикация за месяц
 
