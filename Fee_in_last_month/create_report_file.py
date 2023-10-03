@@ -17,6 +17,7 @@ def create_report_file(month_name: str, html_folder: str, photographer: Optional
 
     if os.path.exists(path_to_file):
         wb = load_workbook(filename=path_to_file, read_only=False)
+        # IDEA  - test sheet is it exist don't create double  !!
         ws = wb.create_sheet(photographer)
     else:
         wb = Workbook()  # если файла еще нет
