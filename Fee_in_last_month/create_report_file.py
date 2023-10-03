@@ -41,7 +41,3 @@ def create_report_file(month_name: str, html_folder: str, photographer: Optional
 
     wb.save(path_to_file)
     return path_to_file
-
-
-if __name__ == '__main__':
-    create_report_file('May', '/Volumes/big4photo/Documents/Kommersant/FEE/7_July_fee/HTML', 'Pupkin')
