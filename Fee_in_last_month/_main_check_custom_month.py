@@ -17,33 +17,39 @@ from date_with_custom_month import custom_month_date
 import time
 
 from u_xlsx_writer import universal_xlsx_writer
+from tqdm import tqdm, trange
 
 
-def count_months_publications(html_folder, path_to_file, photographer):
+def count_months_publications(html_folder: str, path_to_file: str, photographer: str) -> int:
     count = 0  # счетчик засланных снимков за весь месяц
+
+    # all saved html files
     list_of_html = os.listdir(html_folder)
-    for i in list_of_html:
-        with open(f'{html_folder}/{i}', 'r') as file:
+
+    for html_file in list_of_html:
+        with open(f'{html_folder}/{html_file}', 'r') as file:
             html = file.read()
         images_links = get_image_links(html)  # список ссылок на "засланные" снимки в течении одного дня
         images_voc = make_image_dict(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешнего id
-        count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', i)[0], path_to_file, count,
+        count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', html_file)[0], path_to_file, count,
                                      photographer)
-        print(f'{i} - {count = }')
+        print(f'{html_file} - {count = }')
     return count
 
 
-def main_modul(photographer: str, month_n_int: int):
-    months_name, check_date, days_in_month, current_year = custom_month_date(month_n_int)
+def main_modul(photographer: str, month_n_int: int, current_year: int):
+    months_name, check_date, days_in_month = custom_month_date(month_n_int, current_year)
+
+
+
+    # 1 создаю папку для хранения html данных
+
+    html_folder = home.add_subfolder_to_kommersant(f'FEE/{current_year}_{months_name}_fee/{photographer}_HTML')
+    os.makedirs(html_folder, exist_ok=True)
 
     # 2. нужно пройтись по всем дням месяца и получить данные о "засланных" снимках
 
-    # 2.1 создаю папку для хранения html данных
-
-    html_folder = home.add_subfolder_to_kommersant(f'FEE/{month_n_int}_{months_name}_fee/HTML')
-    os.makedirs(html_folder, exist_ok=True)
-
-    path_to_file = create_report_file(months_name, html_folder, photographer)
+    path_to_month_report_file = create_report_file(months_name, html_folder, photographer)
 
     # 2.2  авторизируюсь на сайте and send photographers name
     change_photographer(photographer)
@@ -55,21 +61,15 @@ def main_modul(photographer: str, month_n_int: int):
         time.sleep(1)
         with open(f'{html_folder}/source_page_{check_date}.html', 'w') as file:
             file.write(html)
+    # for test
+
+    # html_folder = '/Volumes/big4photo/Documents/Kommersant/FEE/2023_September_fee/Александр Миридонов_HTML'
+    # path_to_month_report_file = '/Volumes/big4photo/Documents/Kommersant/FEE/2023_September_fee/report_file_September.xlsx'
+    # photographer = 'Александр Миридонов'
 
     # 4 перебираю сохраненные страницы
+    count = count_months_publications(html_folder, path_to_month_report_file, photographer)
 
-    count = count_months_publications(html_folder, path_to_file, photographer)
-    # time.sleep(180)
-    # count = 0  # счетчик засланных снимков за весь месяц
-    # list_of_html = os.listdir(html_folder)
-    # for i in list_of_html:
-    #     with open(f'{html_folder}/{i}', 'r') as file:
-    #         html = file.read()
-    #     images_links = get_image_links(html)  # список ссылок на "засланные" снимки в течении одного дня
-    #     images_voc = make_image_dict(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешнего id
-    #     count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', i)[0], path_to_file, count,
-    #                                  photographer)
-    #     print(f'{i} - {count = }')
 
     columns_n = (
         'Name', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
@@ -77,8 +77,8 @@ def main_modul(photographer: str, month_n_int: int):
 
     universal_xlsx_writer(photographer,
                           columns_names=columns_n,
-                          file_path='/Users/evgeniy/Documents/Kommersant/FEE/report.xlsx',
-                          sheet_name="2023",
+                          file_path=f'/Users/evgeniy/Documents/Kommersant/FEE/report.xlsx',
+                          sheet_name=str(current_year),
                           row_line=photic_index,
                           column_number=month_n_int,
                           cell_data=count
@@ -91,7 +91,12 @@ def main_modul(photographer: str, month_n_int: int):
 
 
 if __name__ == '__main__':
+    # set month number manually
+    month_n_int = 10
+
+
     # month_n_int = month_number()  # int(input('input months number'))
+    current_year =  2023   # int(input('input year'))
     driver = autorization('Евгений Павленко')
 
     camera_men = {
@@ -100,43 +105,28 @@ if __name__ == '__main__':
         4: 'Василий Дерюгин',
         5: 'Максим Кимерлинг',
         6: 'Александр Петросян',
+        7: 'Александр Коряков',
+        # 8: 'Александр Казаков',
+        9: 'Дмитрий Духанин',
+        # 10: 'Алексей Смагин',
+        11: 'Глеб Щелкунов',
+        12: 'Роман Яровицын',
+        13: 'Александр Миридонов',
+        14: 'Анатолий Жданов',
+        15: 'Юрий Стрелец',
+        16: 'Дмитрий Лебедев',
         17: 'Олег Харсеев'
     }
 
-    for i in range(8, 10):
-        # camera_men = ('Евгений Павленко',
-        #               'Александр Коряков',
-        #               'Александр Петросян')
-        # camera_men = [
-        #     'Евгений Павленко',
-        #     'Владислав Лоншаков',
-        #     'Василий Дерюгин',
-        #     'Максим Кимерлинг',
-        #     'Александр Петросян',
-        #     'Александр Коряков',
-        #     'Александр Казаков',
-        #     'Дмитрий Духанин',
-        #     'Алексей Смагин',
-        #     'Глеб Щелкунов',
-        #     'Роман Яровицын',
-        #     'Александр Миридонов',
-        #     'Анатолий Жданов',
-        #     'Юрий Стрелец',
-        #     'Дмитрий Лебедев',
-        #     'Олег Харсеев',
-        # ]
-        # cycle for photographers in list
-        # for photic_index, photic in enumerate(camera_men, 2):
-        #     count, months_name = main_modul(photographer=photic, month_n_int=i)
-        # time.sleep(60)
+    for month_number in range(month_n_int, month_n_int + 1):
 
         # в результате имеем фотографа и количество публикация за месяц
 
         # cycle for photographers in dict
-        # for photic_index, photic in camera_men.items():
-        #     count, months_name = main_modul(photographer=photic, month_n_int=photic_index)
+        for photic_index, photic in tqdm(camera_men.items()):
+            count, months_name = main_modul(photographer=photic, month_n_int=month_number, current_year=current_year)
 
-        photic_index = 16
-        count, months_name = main_modul(photographer='Дмитрий Лебедев', month_n_int=i)
+        # photic_index = 16
+        # count, months_name = main_modul(photographer='Дмитрий Лебедев', month_n_int=i)
 
     end_selenium(driver)
