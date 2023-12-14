@@ -12,6 +12,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from Common.soup_tools import get_image_links
 import logging
 
+from icecream import ic
+
 red = '\033[91m'
 green = '\33[32m'
 end = '\033[0m'
@@ -64,6 +66,8 @@ def find_all_images_on_site_by_shoot_id_or_keyword(driver, shoot_id='', keyword=
     # click search  button
     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
 
+
+
     images_number = number_of_founded_images(keyword, driver)
 
     return driver.current_url[:-1], images_number  # return shoot link
@@ -87,6 +91,12 @@ def page_source_from_selenium(link, keyword, driver) -> object:
 
 def get_images_count_element(driver):
     # get information from field with amount of founded images
+    ic(driver.find_element(By.CSS_SELECTOR,
+                               'body > table:nth-child(6) > tbody:nth-child(1) > '
+                               'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
+                               'tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > '
+                               'b:nth-child(1)'))
+    # !!!! that in case - when no images found
     return driver.find_element(By.CSS_SELECTOR,
                                'body > table:nth-child(6) > tbody:nth-child(1) > '
                                'tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > '
@@ -98,15 +108,17 @@ def number_of_founded_images(keyword, driver):
     # take number of images from site
     try:
         images_count_element = get_images_count_element(driver)
+        ic(images_count_element)
 
         images_count_text = images_count_element.text
+        ic(images_count_text)
         images_count = int(images_count_text.replace(' ', ''))
         print(f'{green}{images_count} снимков с ключевым словом "{keyword}"{end}')
         logging.info(f'{images_count} снимков с ключевым словом "{keyword}"')
         return images_count
     except NoSuchElementException:
         logging.error(f'снимков с ключевым словом "{keyword}" не найдено')
-        raise
+        return 0
 
 
 # function to work with all images on all pages
@@ -131,6 +143,6 @@ def images_rotator(images_number, keyword_link, driver):
 if __name__ == '__main__':
     t_driver = authorization()
     # check_keywords_number('велосипед', t_driver)
-    print(find_all_images_on_site_by_shoot_id_or_keyword(t_driver, '', 'крокодил', only_kr=True))
+    print(find_all_images_on_site_by_shoot_id_or_keyword(t_driver, '', 'левакин', only_kr=True))
 
     # end_selenium(t_driver)
