@@ -4,6 +4,7 @@
 """
 from Common.selenium_tools import end_selenium
 from Fee_in_last_month.remove_folder import delete_folder
+from Fee_in_last_month.select_month import select_month
 from Fee_in_last_month.user_home_folder import home
 from published_images import autorization, select_today_published_images, change_photographer
 from check_published_images import one_day_images_cycle
@@ -92,7 +93,7 @@ def main_modul(photographer: str, month_n_int: int, current_year: int):
 
 if __name__ == '__main__':
     # set month number manually
-    month_n_int = 10
+    month_n_int = select_month()
 
 
     # month_n_int = month_number()  # int(input('input months number'))
@@ -108,7 +109,7 @@ if __name__ == '__main__':
         7: 'Александр Коряков',
         # 8: 'Александр Казаков',
         9: 'Дмитрий Духанин',
-        # 10: 'Алексей Смагин',
+        10: 'Алексей Смагин',
         11: 'Глеб Щелкунов',
         12: 'Роман Яровицын',
         13: 'Александр Миридонов',
