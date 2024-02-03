@@ -3,25 +3,25 @@ import time
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 import pyperclip
-from Common.authorization import authorization
+
 from Common.notification import system_notification
 from Common.selenium_tools import select_category
-
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
 from KSP_shoot_create.input_window import get_input_data
+from kp_selenium_tools.authorization import AuthorizationHandler
 
 
 def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
 
     shoot_caption = get_input_data()  # add caption via GUI
-    pyperclip.copy(shoot_caption) # backup text to clipboard
+    pyperclip.copy(shoot_caption)  # backup text to clipboard
     category_number = create_checkbox_dict()  # select category from GUI
-    driver = authorization()
+    driver = AuthorizationHandler().authorize()
     try:
 
         driver.find_element("css selector",
