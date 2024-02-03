@@ -3,6 +3,8 @@ import time
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 import pyperclip
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from Common.notification import system_notification
 from Common.selenium_tools import select_category
@@ -16,12 +18,14 @@ from kp_selenium_tools.authorization import AuthorizationHandler
 
 
 def create_shoot():
+
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
 
     shoot_caption = get_input_data()  # add caption via GUI
     pyperclip.copy(shoot_caption)  # backup text to clipboard
     category_number = create_checkbox_dict()  # select category from GUI
     driver = AuthorizationHandler().authorize()
+    wait = WebDriverWait(driver, 30, poll_frequency=1)
     try:
 
         driver.find_element("css selector",
@@ -39,6 +43,7 @@ def create_shoot():
 
         # добавляю описание съемки
         caption_input = driver.find_element('id', "ShootDescription")
+        wait.until(EC.element_to_be_selected(caption_input))
         caption_input.send_keys(shoot_caption)
 
         # ввожу дату
