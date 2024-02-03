@@ -4,7 +4,7 @@ from tkinter import Text, WORD
 
 def get_input_data():
     # function inserts the clipboard content into the Text widget:
-    def paste(event):
+    def paste():
         input_field.insert('insert', input_window.clipboard_get())
 
     # Create a new Tkinter window
@@ -13,7 +13,7 @@ def get_input_data():
     # Set the title of the window
     input_window.title("Shoot caption")
     input_window.resizable(False, False)
-    
+
     # Добавляем логику чтобы окно было по центру экрана
     window_height = 200
     window_width = 400
@@ -29,11 +29,23 @@ def get_input_data():
 
     # Create an entry field for the input data
     # input_text = tk.StringVar()
+
+    # old version
     tk.Entry(input_window, width=50)
-    input_field = Text(wrap=WORD, font=("Arial",20), background="#abdbe3")   #  #abdbe3     #f4dca8
+    input_field = Text(wrap=WORD, font=("Arial", 20), background="#abdbe3")  # #abdbe3     #f4dca8
     input_field.pack(padx=50, pady=50)
     input_field.place(x=10, y=30, width=380, height=130)
 
+    # new from bard
+    # input_field = Text(
+    #     input_window,
+    #     wrap=WORD,
+    #     font=("Arial", 20),
+    #     background="#abdbe3",
+    #     width=38,
+    #     height=10,
+    # )
+    # input_field.pack(padx=10, pady=10)
 
     # Create a button to submit the data
     submit_button = tk.Button(input_window, text="Submit", command=input_window.quit, height=1, width=10)
@@ -49,7 +61,7 @@ def get_input_data():
     input_field.bind('<Control-v>', lambda e: input_field.event_generate('<<Paste>>'))
 
     # Get the entered data from the input field
-    input_text = input_field.get("1.0",'end-1c')
+    input_text = input_field.get("1.0", 'end-1c')
 
     # Destroy the window after it has been submitted
     input_window.destroy()
@@ -61,6 +73,3 @@ def get_input_data():
 
 if __name__ == '__main__':
     print(get_input_data())
-
-
-
