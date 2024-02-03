@@ -1,13 +1,14 @@
 import os
 import re
+from pathlib import Path
 
-from Common.authorization import autorization
 from Common.soup_tools import get_image_links
 from Fee_in_last_month.check_published_images import one_day_images_cycle
 from Fee_in_last_month.images_vocabulary import make_image_dict
+from kp_selenium_tools.authorization import AuthorizationHandler
 
 
-def read_information_from_html(html_folder,path_to_file, photographer):
+def read_information_from_html(html_folder, path_to_file, photographer):
     count = 0  # счетчик засланных снимков за весь месяц
     list_of_html = os.listdir(html_folder)
     for i in list_of_html:
@@ -21,8 +22,9 @@ def read_information_from_html(html_folder,path_to_file, photographer):
 
 
 if __name__ == '__main__':
-    driver = autorization()
-    
-    read_information_from_html('/Volumes/big4photo/Documents/Kommersant/FEE/7_July_fee/HTML',
-                               '/Volumes/big4photo/Documents/Kommersant/FEE/7_July_fee/report_file_July_Евгений Павленко.xlsx',
+    driver = AuthorizationHandler().authorize()
+
+    read_information_from_html(f'{Path.home()}/Documents/Kommersant/FEE/7_July_fee/HTML',
+                               f'{Path.home()}/Documents/Kommersant/FEE/7_July_fee/'
+                               f'report_file_July_Евгений Павленко.xlsx',
                                'Pupkin')
