@@ -1,20 +1,44 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from Common.crome_options import setting_chrome_options
+
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+
 from Common.credentials import get_credentials
+from Common.crome_options import setting_chrome_options
 
 
-def authorization():
-    driver = webdriver.Chrome(options=setting_chrome_options())
-    login, password, first_loggin = get_credentials()
-    driver.get(first_loggin)
-    login_input = driver.find_element(By.ID, "login")
-    login_input.send_keys(login)
-    password_input = driver.find_element(By.ID, "password")
-    password_input.send_keys(password)
-    driver.find_element(By.NAME, "loginbtn").click()
-    return driver
+class AuthorizationHandler:
+    def __init__(self):
+        self.service = Service(ChromeDriverManager().install())
+        self.driver = None
+
+    def setup_driver(self):
+        self.driver = webdriver.Chrome(service=self.service, options=setting_chrome_options())
+
+    def perform_authorization(self):
+        login, password, first_loggin = get_credentials()
+        self.driver.get(first_loggin)
+        login_input = self.driver.find_element("id", "login")
+        login_input.send_keys(login)
+        password_input = self.driver.find_element("id", "password")
+        password_input.send_keys(password)
+        self.driver.find_element("name", "loginbtn").click()
+
+    def get_driver(self):
+        return self.driver
+
+    def authorize(self):
+        self.setup_driver()
+        self.perform_authorization()
+        return self.get_driver()
 
 
 if __name__ == '__main__':
-    authorization()
+    authorization_handler = AuthorizationHandler()
+    authorization_handler.authorize()
+"""
+
+This code defines a class `AuthorizationHandler` that encapsulates the logic for handling authorization. 
+The `setup_driver` method initializes the WebDriver, `perform_authorization` handles the actual authorization process,
+and `get_driver` returns the WebDriver instance. The `authorize` method combines these steps for easy authorization.
+"""
