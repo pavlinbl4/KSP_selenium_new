@@ -1,6 +1,6 @@
 from selenium.webdriver.support.wait import WebDriverWait
 
-from Common.authorization import authorization
+
 from Common.kp_image_info_page import image_info_optimization
 from Common.make_page_link import make_history_link
 from Common.regex_tools import make_text_edit_link
@@ -13,6 +13,8 @@ from Common.soup_tools import get_image_links
 import logging
 
 from icecream import ic
+
+from kp_selenium_tools.authorization import AuthorizationHandler
 
 red = '\033[91m'
 green = '\33[32m'
@@ -141,7 +143,7 @@ def images_rotator(images_number, keyword_link, driver):
 
 
 if __name__ == '__main__':
-    t_driver = authorization()
+    t_driver = AuthorizationHandler().authorize()
     # check_keywords_number('велосипед', t_driver)
     print(find_all_images_on_site_by_shoot_id_or_keyword(t_driver, '', 'левакин', only_kr=True))
 
