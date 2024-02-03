@@ -1,8 +1,6 @@
 # удаление мусорных снимков по номеру съемки и резервное скачивание съемки на диск
 import time
 from selenium.webdriver.common.by import By
-
-from Common.authorization import authorization
 from Common.choose_input import chose_input
 from Common.download_to_selected_folder import enable_download
 from Common.get_html import get_html_from_link
@@ -13,6 +11,7 @@ from Common.soup_tools import get_image_links
 import sys
 from selenium.common.exceptions import NoSuchElementException, NoSuchWindowException
 from Common.tk_tools import select_folder_via_gui
+from kp_selenium_tools.authorization import AuthorizationHandler
 
 
 def main_modul():
@@ -23,7 +22,7 @@ def main_modul():
     download_dir = f'{image_folder}/{shoot_id}'
 
     # authorization on site and enable selected download folder
-    driver = authorization()
+    driver = AuthorizationHandler().authorize()
     enable_download(driver, download_dir)
 
     # path_to_file = create_report("Kommersant", "deleted_images", shoot_id, [shoot_id, "action"])
