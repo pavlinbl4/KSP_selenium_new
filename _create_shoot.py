@@ -52,6 +52,7 @@ def create_shoot():
         day_input.send_keys(today_date)
 
         time_input = driver.find_element('id', 'TimeFrom')
+        wait.until(EC.element_to_be_selected(time_input))
         time_input.send_keys(Keys.NUMPAD1)
 
         time_input.send_keys(Keys.SPACE)
