@@ -3,12 +3,14 @@ Work with the image description page that is
 available when you press the button with the hammer and wrench icon.
 """
 
-from Common.authorization import authorization
+
 from selenium.common.exceptions import NoSuchElementException
 from Common.lematization import lema
 from Common.regex_tools import keywords_opimization
-from Common.save_info_in_csv import write_kp_files_keywords
 from selenium.webdriver.common.by import By
+
+from Common.write_to_csv import write_kp_files_keywords
+from kp_selenium_tools.authorization import AuthorizationHandler
 
 
 def add_new_keywords(concatinated_keywords):
@@ -69,7 +71,7 @@ def image_info_optimization(driver, text_edit_link):
 
 
 if __name__ == '__main__':
-    t_driver = authorization()
+    t_driver = AuthorizationHandler().authorize()
 
     image_info_optimization(t_driver,
                             'https://image.kommersant.ru/photo/archive/adm/AddPhotoStep3.asp?ID=3791347&CloseForm=1')
