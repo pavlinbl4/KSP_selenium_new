@@ -5,13 +5,14 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import pyperclip
-from Common.authorization import autorization
+
 from Common.regex_tools import make_text_edit_link, keywords_opimization
 from Common.soup_tools import get_image_links
 from add_some_keywords import add_new_keywords
 from keywords_in_txt_file import write_keywords_in_txt_file
+from kp_selenium_tools.authorization import AuthorizationHandler
 from remove_wrong_keyword import remove_mistake
-from Common.selenium_tools import check_keywords_number, go_my_images, set_keywords_to_site
+from Common.selenium_tools import number_of_founded_images, set_keywords_to_site
 from user_communication import display_your_choice
 
 red = '\033[91m'
@@ -35,7 +36,7 @@ def keywords_search(keyword):  # find all my images with keyword escape KP part
     select.select_by_value('100')
     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
 
-    return check_keywords_number(keyword, driver)
+    return number_of_founded_images(keyword, driver)
 
 
 def get_keyword_of_image(link):
@@ -118,5 +119,5 @@ def main():
 
 
 if __name__ == '__main__':
-    driver = autorization()
+    driver = AuthorizationHandler().authorize()
     main()
