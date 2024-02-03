@@ -11,4 +11,4 @@ def add_new_keywords(new_keywords: str, keywords: str) -> str:
 
 
 if __name__ == '__main__':
-    print(add_new_keywords(' new_kyeword_1   ,      new_keyword_2,   new_keyword_3', 'old1, old2'))
+    print(add_new_keywords(' added_kyeword_1   ,      new_keyword_2, fox, fox, new_keyword_2, dog, dog,  new_keyword_3', 'old1, old2'))
