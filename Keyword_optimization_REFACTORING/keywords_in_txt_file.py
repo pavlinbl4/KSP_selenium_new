@@ -1,8 +1,9 @@
 from datetime import datetime
 from Common.set_to_string import convert_set_to_string
 import logging
+from pathlib import Path
 
-keyword_file = '/Users/evgeniy/Documents/keywords/keywords in work.txt'
+keyword_file = f'{Path.home()}/Documents/keywords/keywords in work.txt'
 
 
 # Create logger
