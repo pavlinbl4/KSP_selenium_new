@@ -3,8 +3,8 @@ import tkinter as tk
 result = []
 
 
-def input_window()->str:
-    def confirm_input(event=None):
+def input_window() -> str:
+    def confirm_input():
         # get text input
         text = input_field.get("1.0", 'end-1c')
         result.append(text)
