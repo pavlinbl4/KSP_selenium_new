@@ -5,9 +5,12 @@ from dotenv import load_dotenv
 import os
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from Common.crome_options import setting_chrome_options
+
+from kp_selenium_tools.crome_options import setting_chrome_options
 from scrap_publication_list import image_publications_voc
 from checked_day_publications_only import checked_month_publications_only
+
+from icecream import ic
 
 red = '\033[91m'
 green = '\33[32m'
@@ -22,13 +25,13 @@ report_web_link = 'https://image.kommersant.ru/photo/archive/pubhistory.asp?ID='
 
 
 def check_id_image(image_id):
-    select = Select(driver.find_element(By.ID, "dt"))  # select "засыла"
+    select = Select(driver.find_element("id", "dt"))  # select "засыла"
     select.select_by_value("3")
 
-    data_input = driver.find_element(By.ID, "since")
+    data_input = driver.find_element("id", "since")
     data_input.clear()
 
-    id_input = driver.find_element(By.ID, "code")
+    id_input = driver.find_element("id", "code")
     id_input.clear()
     id_input.send_keys(image_id)
 
@@ -38,10 +41,12 @@ def check_id_image(image_id):
 
 
 def autorization(photographer):  # авторизация на главной странице
+    # ic(first_loggin)
+    # ic(photographer)
     driver.get(first_loggin)
-    login_input = driver.find_element(By.ID, "login")
+    login_input = driver.find_element("id", "login")
     login_input.send_keys(login)
-    password_input = driver.find_element(By.ID, "password")
+    password_input = driver.find_element("id", "password")
     password_input.send_keys(password)
     driver.find_element(By.CSS_SELECTOR, ".system input.but").click()
     driver.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
@@ -60,31 +65,32 @@ def change_photographer(photographer):
 
 def select_today_published_images(check_date: str):
     locator = (By.CLASS_NAME, 'stxt')
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(locator))
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located(locator))
 
-    select = Select(driver.find_element(By.NAME, 'ps'))
+    select = Select(driver.find_element("name", 'ps'))
     select.select_by_value('50')
 
-    select = Select(driver.find_element(By.ID, "dt"))  # select "засыла"
+    select = Select(driver.find_element("id", "dt"))  # select "засыла"
     select.select_by_value("3")
 
-    data_input = driver.find_element(By.ID, "since")
+    data_input = driver.find_element("id", "since")
     data_input.clear()
     data_input.send_keys(check_date)
 
-    data_input = driver.find_element(By.ID, "till")
+    data_input = driver.find_element("id", "till")
     data_input.clear()
     data_input.send_keys(check_date)
 
     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
 
     locator = (By.CLASS_NAME, 'stxt')
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(locator))
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located(locator))
 
     return driver.page_source
 
 
-def published_for_all_time(k):  # функция находит все опубликованные снимки из 'засыла' без фильтрации по датам
+def published_for_all_time(
+        k: object) -> object:  # функция находит все опубликованные снимки из 'засыла' без фильтрации по датам
     report_link = f'{report_web_link}{k}#web'
     driver.get(report_link)
     report_html = driver.page_source
@@ -102,5 +108,4 @@ def publication_info(k, count, check_date):
 driver = webdriver.Chrome(options=setting_chrome_options())
 
 if __name__ == '__main__':
-    # select_today_published_images('01.07.2023')
-    change_photographer('Евгений Павленко')
+    autorization('Евгений Павленко')
