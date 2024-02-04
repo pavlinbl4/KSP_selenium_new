@@ -5,7 +5,7 @@
 from Common.selenium_tools import end_selenium
 from Fee_in_last_month.remove_folder import delete_folder
 from Fee_in_last_month.select_month import select_month
-from Fee_in_last_month.user_home_folder import home
+
 from published_images import autorization, select_today_published_images, change_photographer
 from check_published_images import one_day_images_cycle
 from images_links import get_image_links
@@ -17,6 +17,7 @@ from datetime import datetime
 from date_with_custom_month import custom_month_date
 import time
 
+from tools.user_home_folder import HomeFolder
 from u_xlsx_writer import universal_xlsx_writer
 from tqdm import tqdm, trange
 
@@ -41,12 +42,11 @@ def count_months_publications(html_folder: str, path_to_file: str, photographer:
 def main_modul(photographer: str, month_n_int: int, current_year: int):
     months_name, check_date, days_in_month = custom_month_date(month_n_int, current_year)
 
-
-
     # 1 создаю папку для хранения html данных
 
-    html_folder = home.add_subfolder_to_kommersant(f'FEE/{current_year}_{months_name}_fee/{photographer}_HTML')
-    os.makedirs(html_folder, exist_ok=True)
+    # html_folder = home.add_subfolder_to_kommersant(f'FEE/{current_year}_{months_name}_fee/{photographer}_HTML')
+    html_folder = HomeFolder(f'FEE/{current_year}_{months_name}_fee/{photographer}_HTML').add_subfolder()
+    # os.makedirs(html_folder, exist_ok=True)
 
     # 2. нужно пройтись по всем дням месяца и получить данные о "засланных" снимках
 
@@ -71,7 +71,6 @@ def main_modul(photographer: str, month_n_int: int, current_year: int):
     # 4 перебираю сохраненные страницы
     count = count_months_publications(html_folder, path_to_month_report_file, photographer)
 
-
     columns_n = (
         'Name', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
         'November', 'December')
@@ -95,9 +94,8 @@ if __name__ == '__main__':
     # set month number manually
     month_n_int = select_month()
 
-
     # month_n_int = month_number()  # int(input('input months number'))
-    current_year =  2023   # int(input('input year'))
+    current_year = 2024  # int(input('input year'))
     driver = autorization('Евгений Павленко')
 
     camera_men = {
