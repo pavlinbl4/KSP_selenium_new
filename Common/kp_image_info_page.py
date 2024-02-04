@@ -3,7 +3,6 @@ Work with the image description page that is
 available when you press the button with the hammer and wrench icon.
 """
 
-
 from selenium.common.exceptions import NoSuchElementException
 from Common.lematization import lema
 from Common.regex_tools import keywords_opimization
@@ -55,7 +54,6 @@ def image_info_optimization(driver, text_edit_link):
 
         add_new_keywords(concatinated_keywords)
 
-        # optimized_keywords = keywords_opimization(keywords)  # replace ; with comma
         optimized_keywords = keywords_opimization(concatinated_keywords)  # replace ; with comma
 
         print(optimized_keywords)
