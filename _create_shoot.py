@@ -3,7 +3,6 @@ import time
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 import pyperclip
-
 from Common.notification import system_notification
 from Common.selenium_tools import select_category
 
@@ -12,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
 from KSP_shoot_create.input_window import get_input_data
+from ftp.ftp_follder import create_ftp_folder
 from kp_selenium_tools.authorization import AuthorizationHandler
 
 
@@ -82,6 +82,8 @@ def create_shoot():
         number = driver.find_element('id', "shootnum").text
         number = number.replace("№ ", "KSP_0")
         pyperclip.copy(number)
+
+        create_ftp_folder(number)
 
         system_notification(number, shoot_caption)
 
