@@ -16,6 +16,7 @@ from kp_selenium_tools.authorization import AuthorizationHandler
 
 def main_modul():
     shoot_id = chose_input()  # shoot_id = 'KSP_017892'
+    # shoot_id = ''
 
     # select folder to download images
     image_folder = select_folder_via_gui()
@@ -25,13 +26,12 @@ def main_modul():
     driver = AuthorizationHandler().authorize()
     enable_download(driver, download_dir)
 
-    # path_to_file = create_report("Kommersant", "deleted_images", shoot_id, [shoot_id, "action"])
     deleted_count = 0
 
     link, number_of_shots = find_all_images_on_site_by_shoot_id_or_keyword(driver, shoot_id, keyword='', only_kr=True)
+
     html = get_html_from_link(link, driver)  # получаю html открытой страницы
     images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
-    # number_of_shots = len(images_links)
 
     print(f'найдено {number_of_shots} снимков')
     if number_of_shots == 0:
@@ -80,7 +80,6 @@ def main_modul():
         end_selenium(driver)
 
     print(f'удалено {deleted_count} снимков')
-    end_selenium(driver)
 
 
 if __name__ == '__main__':

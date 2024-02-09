@@ -3,9 +3,6 @@ import time
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 import pyperclip
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 from Common.notification import system_notification
 from Common.selenium_tools import select_category
 
@@ -14,18 +11,17 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
 from KSP_shoot_create.input_window import get_input_data
+from ftp.ftp_follder import create_ftp_folder
 from kp_selenium_tools.authorization import AuthorizationHandler
 
 
 def create_shoot():
-
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
 
     shoot_caption = get_input_data()  # add caption via GUI
     pyperclip.copy(shoot_caption)  # backup text to clipboard
     category_number = create_checkbox_dict()  # select category from GUI
     driver = AuthorizationHandler().authorize()
-    wait = WebDriverWait(driver, 30, poll_frequency=1)
     try:
 
         driver.find_element("css selector",
@@ -43,16 +39,13 @@ def create_shoot():
 
         # добавляю описание съемки
         caption_input = driver.find_element('id', "ShootDescription")
-        wait.until(EC.element_to_be_selected(caption_input))
         caption_input.send_keys(shoot_caption)
 
         # ввожу дату
         day_input = driver.find_element('id', "DateFrom")
-        wait.until(EC.element_to_be_selected(day_input))
         day_input.send_keys(today_date)
 
         time_input = driver.find_element('id', 'TimeFrom')
-        wait.until(EC.element_to_be_selected(time_input))
         time_input.send_keys(Keys.NUMPAD1)
 
         time_input.send_keys(Keys.SPACE)
@@ -89,6 +82,8 @@ def create_shoot():
         number = driver.find_element('id', "shootnum").text
         number = number.replace("№ ", "KSP_0")
         pyperclip.copy(number)
+
+        create_ftp_folder(number)
 
         system_notification(number, shoot_caption)
 
