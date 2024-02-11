@@ -5,6 +5,10 @@ from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service
 from datetime import date
 import re
+from selenium.webdriver import FirefoxOptions
+
+DATE_FORMAT = "%d.%m.%y"
+URL = '<https://rdk.spb.kommersant.ru:9443/rdk2/?p=RDK2SPB,NODE:2353975>'
 
 
 def find_date(str_with_date='№24 Пн, 05.02.24'):
@@ -18,27 +22,19 @@ class FireFoxDriver:
         load_dotenv()
         self.rdk_logging = os.environ.get('rdk_logging')
         self.service = Service(GeckoDriverManager().install())
-        self.today = date.today().strftime("%d.%m.%y")
-        self.driver = None
+        self.today = date.today().strftime(DATE_FORMAT)
+        self.options = FirefoxOptions()
+        self.options.add_argument("--headless")
+        self.driver = webdriver.Firefox(service=self.service, options=self.options)
         self.all_spans = None
         self.today_link = None
 
-    def setup_driver(self):
-        self.driver = webdriver.Firefox(service=self.service)
-
-    def get_driver(self):
-        return self.driver
-
     def perform_authorization(self):
-        self.setup_driver()
         self.driver.get(self.rdk_logging)
 
-    def authorize(self):
-        self.perform_authorization()
-
     def get_all_notes(self):
-        self.authorize()
-        self.driver.get('https://rdk.spb.kommersant.ru:9443/rdk2/?p=RDK2SPB,NODE:2353975')
+        self.perform_authorization()
+        self.driver.get(URL)
         self.all_spans = self.driver.find_elements('xpath', '//span[@id="phList"]/a')
         return self.all_spans
 
@@ -51,7 +47,7 @@ class FireFoxDriver:
 
     def get_today_articles(self):
         self.today_link = self.get_today_note()
-        self.driver.get(self.today_link)  # '//tr[@class="mapLO"][2]/td[6]/img'
+        self.driver.get(self.today_link)
         work_map = self.driver.find_elements('xpath', '//tr[@class="mapLO"]')
         for x in range(1, len(work_map)):
             all_trs = work_map[x].find_elements('xpath', 'td')
