@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
 from KSP_shoot_create.input_window import get_input_data
+from Telegramm_message.send_message_to_telegram import send_telegram_message
 from ftp.ftp_follder import create_ftp_folder
 from kp_selenium_tools.authorization import AuthorizationHandler
 
@@ -84,6 +85,8 @@ def create_shoot():
         pyperclip.copy(number)
 
         create_ftp_folder(number)
+
+        send_telegram_message(f'{number} - {shoot_caption}')
 
         system_notification(number, shoot_caption)
 
