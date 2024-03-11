@@ -3,6 +3,7 @@
 2. "засланное" изображение не всегда опубликовано, нужно проверить это отдельно
 """
 from Common.selenium_tools import end_selenium
+from Fee_in_last_month.read_data_from_html_files import read_information_from_html
 from Fee_in_last_month.remove_folder import delete_folder
 from Fee_in_last_month.select_month import select_month
 
@@ -22,21 +23,21 @@ from u_xlsx_writer import universal_xlsx_writer
 from tqdm import tqdm, trange
 
 
-def count_months_publications(html_folder: str, path_to_file: str, photographer: str) -> int:
-    count = 0  # счетчик засланных снимков за весь месяц
-
-    # all saved html files
-    list_of_html = os.listdir(html_folder)
-
-    for html_file in list_of_html:
-        with open(f'{html_folder}/{html_file}', 'r') as file:
-            html = file.read()
-        images_links = get_image_links(html)  # список ссылок на "засланные" снимки в течении одного дня
-        images_voc = make_image_dict(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешнего id
-        count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', html_file)[0], path_to_file, count,
-                                     photographer)
-        print(f'{html_file} - {count = }')
-    return count
+# def count_months_publications(html_folder: str, path_to_file: str, photographer: str) -> int:
+#     count = 0  # счетчик засланных снимков за весь месяц
+#
+#     # all saved html files
+#     list_of_html = os.listdir(html_folder)
+#
+#     for html_file in list_of_html:
+#         with open(f'{html_folder}/{html_file}', 'r') as file:
+#             html = file.read()
+#         images_links = get_image_links(html)  # список ссылок на "засланные" снимки в течении одного дня
+#         images_voc = make_image_dict(images_links)  # словарь из "внутреннего" id снимка и стандартного, внешнего id
+#         count = one_day_images_cycle(images_voc, re.findall(r'\d{2}.\d{2}.\d{4}', html_file)[0], path_to_file, count,
+#                                      photographer)
+#         print(f'{html_file} - {count = }')
+#     return count
 
 
 def main_modul(photographer: str, month_n_int: int, current_year: int):
@@ -69,7 +70,8 @@ def main_modul(photographer: str, month_n_int: int, current_year: int):
     # photographer = 'Александр Миридонов'
 
     # 4 перебираю сохраненные страницы
-    count = count_months_publications(html_folder, path_to_month_report_file, photographer)
+    # count = count_months_publications(html_folder, path_to_month_report_file, photographer)
+    count = read_information_from_html(html_folder, path_to_month_report_file, photographer)
 
     columns_n = (
         'Name', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
