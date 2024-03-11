@@ -1,3 +1,6 @@
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium import webdriver
@@ -9,6 +12,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from kp_selenium_tools.crome_options import setting_chrome_options
 from scrap_publication_list import image_publications_voc
 from checked_day_publications_only import checked_month_publications_only
+
+from loguru import logger
 
 from icecream import ic
 
@@ -41,8 +46,7 @@ def check_id_image(image_id):
 
 
 def autorization(photographer):  # авторизация на главной странице
-    # ic(first_loggin)
-    # ic(photographer)
+    logger.debug(first_loggin)
     driver.get(first_loggin)
     login_input = driver.find_element("id", "login")
     login_input.send_keys(login)
@@ -105,7 +109,9 @@ def publication_info(k, count, check_date):
     return used_images
 
 
-driver = webdriver.Chrome(options=setting_chrome_options())
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=setting_chrome_options())
+
 
 if __name__ == '__main__':
     autorization('Евгений Павленко')
