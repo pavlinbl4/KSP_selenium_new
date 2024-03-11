@@ -8,16 +8,16 @@ green = '\33[32m'
 end = '\033[0m'
 
 
-def checked_day_publications_only(check_date, publication_voc, count):
-    image_info = {}
-    for i in publication_voc:
-        if publication_voc[i][0] == check_date:
-            image_info['A'] = count
-            image_info['B'] = publication_voc[0]
-            image_info["C"] = publication_voc[i][0]
-            image_info["D"] = publication_voc[i][1]
-            image_info["E"] = publication_voc[i][2]
-    return image_info
+# def checked_day_publications_only(check_date, publication_voc, count):
+#     image_info = {}
+#     for i in publication_voc:
+#         if publication_voc[i][0] == check_date:
+#             image_info['A'] = count
+#             image_info['B'] = publication_voc[0]
+#             image_info["C"] = publication_voc[i][0]
+#             image_info["D"] = publication_voc[i][1]
+#             image_info["E"] = publication_voc[i][2]
+#     return image_info
 
 
 def checked_month_publications_only(check_date, publication_voc, count):
