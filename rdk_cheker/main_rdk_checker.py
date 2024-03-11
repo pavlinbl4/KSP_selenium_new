@@ -10,9 +10,9 @@ from dotenv import load_dotenv
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service
 
-from Telegramm_message.send_message_to_telegram import send_telegram_message
 from rdk_cheker.check_article_status import check_article_status
 from rdk_cheker.delete_old_pickle import delete_old_pickle
+from rdk_cheker.send_message_to_telegram import send_telegram_message
 
 service = Service(GeckoDriverManager().install())
 driver = webdriver.Firefox(service=service)
@@ -79,4 +79,4 @@ def get_article_status():
 
 if __name__ == '__main__':
     get_article_status()
-    # print(article_status())
+

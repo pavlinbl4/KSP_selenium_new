@@ -1,6 +1,5 @@
 import pickle
-
-from Telegramm_message.send_message_to_telegram import send_telegram_message
+from rdk_cheker.send_message_to_telegram import send_telegram_message
 
 
 def check_article_status(article_name, article_status, today_filename):
@@ -13,6 +12,5 @@ def check_article_status(article_name, article_status, today_filename):
         article_dict[article_name] = article_status
 
 
-
 if __name__ == '__main__':
-    check_article_status('вайлдберис на утро среды', '&site')
+    check_article_status('вайлдберис на утро среды', '&site', 'dddd')
