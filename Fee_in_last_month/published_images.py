@@ -30,18 +30,6 @@ FIRST_LOGIN = os.environ.get('first_loggin')
 report_web_link = 'https://image.kommersant.ru/photo/archive/pubhistory.asp?ID='
 
 
-# def check_id_image(image_id):
-#     select = Select(driver.find_element("id", "dt"))  # select "засыла"
-#     select.select_by_value("3")
-#     data_input = driver.find_element("id", "since")
-#     data_input.clear()
-#     id_input = driver.find_element("id", "code")
-#     id_input.clear()
-#     id_input.send_keys(image_id)
-#     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
-#     return driver.page_source
-
-
 def autorization(photographer):  # авторизация на главной странице
     logger.debug(FIRST_LOGIN)
     driver.get(FIRST_LOGIN)
