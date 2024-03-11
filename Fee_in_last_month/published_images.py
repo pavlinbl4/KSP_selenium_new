@@ -14,17 +14,18 @@ from scrap_publication_list import image_publications_voc
 from checked_day_publications_only import checked_month_publications_only
 
 from loguru import logger
-
 from icecream import ic
+
+ic.disable()
 
 red = '\033[91m'
 green = '\33[32m'
 end = '\033[0m'
 
 load_dotenv()
-login = os.environ.get('login')
-password = os.environ.get('password')
-first_loggin = os.environ.get('first_loggin')
+LOGIN = os.environ.get('login')
+PASSWORD = os.environ.get('password')
+FIRST_LOGIN = os.environ.get('first_loggin')
 
 report_web_link = 'https://image.kommersant.ru/photo/archive/pubhistory.asp?ID='
 
@@ -32,45 +33,38 @@ report_web_link = 'https://image.kommersant.ru/photo/archive/pubhistory.asp?ID='
 def check_id_image(image_id):
     select = Select(driver.find_element("id", "dt"))  # select "засыла"
     select.select_by_value("3")
-
     data_input = driver.find_element("id", "since")
     data_input.clear()
-
     id_input = driver.find_element("id", "code")
     id_input.clear()
     id_input.send_keys(image_id)
-
     driver.find_element(By.CSS_SELECTOR, '#searchbtn').click()
-
     return driver.page_source
 
 
 def autorization(photographer):  # авторизация на главной странице
-    logger.debug(first_loggin)
-    driver.get(first_loggin)
+    logger.debug(FIRST_LOGIN)
+    driver.get(FIRST_LOGIN)
     login_input = driver.find_element("id", "login")
-    login_input.send_keys(login)
+    login_input.send_keys(LOGIN)
     password_input = driver.find_element("id", "password")
-    password_input.send_keys(password)
+    password_input.send_keys(PASSWORD)
     driver.find_element(By.CSS_SELECTOR, ".system input.but").click()
     driver.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
     return driver
 
 
 def change_photographer(photographer):
-    driver.get(first_loggin)
+    driver.get(FIRST_LOGIN)
     photographer_name_field = driver.find_element(By.CSS_SELECTOR, '#au')
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(photographer_name_field))
     photographer_name_field.clear()
-    # driver.find_element(By.CSS_SELECTOR, '#au').clear()
-    # photographer_name_field().send_keys(photographer)
     driver.find_element(By.CSS_SELECTOR, '#au').send_keys(photographer)
 
 
 def select_today_published_images(check_date: str):
     locator = (By.CLASS_NAME, 'stxt')
     WebDriverWait(driver, 30).until(EC.presence_of_element_located(locator))
-
     select = Select(driver.find_element("name", 'ps'))
     select.select_by_value('50')
 
@@ -111,7 +105,6 @@ def publication_info(k, count, check_date):
 
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=setting_chrome_options())
-
 
 if __name__ == '__main__':
     autorization('Евгений Павленко')
