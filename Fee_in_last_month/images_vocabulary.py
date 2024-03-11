@@ -17,4 +17,4 @@ def make_image_dict(image_links: list[str]) -> dict[str, str]:
 
     return image_dict
 
-# image_dict = {photoid:ksp_id for photoid, ksp_id in zip(photoids, ksp_ids)}
+
