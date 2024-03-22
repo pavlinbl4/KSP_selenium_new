@@ -10,7 +10,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from KSP_shoot_create.checkbox_output import create_checkbox_dict
-from KSP_shoot_create.input_window import get_input_data
+# from KSP_shoot_create.input_window import get_input_data
+from KSP_shoot_create.start_window import get_input_data
 from Telegramm_message.send_message_to_telegram import send_telegram_message
 from ftp.ftp_follder import create_ftp_folder
 from kp_selenium_tools.authorization import AuthorizationHandler
@@ -19,9 +20,10 @@ from kp_selenium_tools.authorization import AuthorizationHandler
 def create_shoot():
     today_date = f'{datetime.now().strftime("%d.%m.%Y")}'
 
-    shoot_caption = get_input_data()  # add caption via GUI
+    # shoot_caption = get_input_data()  # add caption via GUI
+    shoot_caption, category_number = get_input_data()  # add caption via GUI
     pyperclip.copy(shoot_caption)  # backup text to clipboard
-    category_number = create_checkbox_dict()  # select category from GUI
+    # category_number = create_checkbox_dict()  # select category from GUI
     driver = AuthorizationHandler().authorize()
     try:
 
@@ -41,6 +43,7 @@ def create_shoot():
         # добавляю описание съемки
         caption_input = driver.find_element('id', "ShootDescription")
         caption_input.send_keys(shoot_caption)
+        time.sleep(2)
 
         # ввожу дату
         day_input = driver.find_element('id', "DateFrom")
@@ -61,7 +64,7 @@ def create_shoot():
         customer_input = driver.find_element('id', "CustomerContact")
         customer_input.send_keys("Павленко Евгений Валентинович")
 
-        time.sleep(1)
+        time.sleep(2)
         customer_input.send_keys(Keys.DOWN)
         customer_input.send_keys(Keys.ENTER)
 
