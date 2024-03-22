@@ -9,12 +9,71 @@ from Common.selenium_tools import select_category
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from KSP_shoot_create.checkbox_output import create_checkbox_dict
-# from KSP_shoot_create.input_window import get_input_data
 from KSP_shoot_create.start_window import get_input_data
 from Telegramm_message.send_message_to_telegram import send_telegram_message
 from ftp.ftp_follder import create_ftp_folder
 from kp_selenium_tools.authorization import AuthorizationHandler
+
+
+def navigate_to_shoot_creation_page(driver):
+    driver.find_element("css selector",
+                        "body > table.logotbl > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(2) > a").click()
+    driver.find_element('id', "nav_shoots_change").click()
+
+
+def fill_shoot_details(driver, shoot_caption, category_number):
+    original_window = driver.current_window_handle
+
+    # Add category
+    select_category(category_number, driver)
+    driver.switch_to.window(original_window)  # Focus on the main window after closing the category window
+
+    # Add shoot description
+    WebDriverWait(driver, 3).until(EC.element_to_be_clickable(('id', "ShootDescription")))
+    caption_input = driver.find_element('id', "ShootDescription")
+    caption_input.send_keys(shoot_caption)
+
+
+def set_shoot_date(driver, today_date):
+    # ввожу дату
+    WebDriverWait(driver, 3).until(EC.element_to_be_clickable(('id', "DateFrom")))
+    day_input = driver.find_element('id', "DateFrom")
+    day_input.send_keys(today_date)
+
+    time_input = driver.find_element('id', 'TimeFrom')
+    time_input.send_keys(Keys.NUMPAD1)
+
+    time_input.send_keys(Keys.SPACE)
+    time_input = driver.find_element('id', 'TimeTo')
+    time_input.send_keys(Keys.NUMPAD2)
+    time_input.send_keys(Keys.SPACE)
+
+
+def set_customer(driver):
+    WebDriverWait(driver, 3).until(EC.element_to_be_clickable(('id', "CustomerContact")))
+    customer_input = driver.find_element('id', "CustomerContact")
+    customer_input.send_keys("Павленко Евгений Валентинович")
+
+    time.sleep(2)
+    customer_input.send_keys(Keys.DOWN)
+    customer_input.send_keys(Keys.ENTER)
+
+
+def set_bildeditor(driver):
+    # выбираю бильдредактора с помощью класса Select
+    WebDriverWait(driver, 3).until(EC.element_to_be_clickable(("name", 'EditorContactID')))
+    select = Select(driver.find_element("name", 'EditorContactID'))
+    select.select_by_value('2571')
+
+
+def set_author(driver):
+    author_input = driver.find_element('id', "AuthorContact")
+    author_input.send_keys("Павленко Евгений Валентинович")
+    time.sleep(1)
+    author_input.send_keys(Keys.DOWN)
+    time.sleep(1)
+    author_input.send_keys(Keys.ENTER)
+    time.sleep(1)
 
 
 def create_shoot():
@@ -27,58 +86,17 @@ def create_shoot():
     driver = AuthorizationHandler().authorize()
     try:
 
-        driver.find_element("css selector",
-                            "body > table.logotbl > tbody > tr:nth-child(3)"
-                            " > td > table > tbody > tr > td:nth-child(2) > a").click()
-        driver.find_element('id',
-                            "nav_shoots_change").click()
+        navigate_to_shoot_creation_page(driver)
 
-        original_window = driver.current_window_handle
+        fill_shoot_details(driver, shoot_caption, category_number)
 
-        # add category
-        select_category(category_number, driver)
+        set_shoot_date(driver, today_date)
 
-        driver.switch_to.window(original_window)  # focus in the main window after closing category window
+        set_customer(driver)
 
-        # добавляю описание съемки
-        caption_input = driver.find_element('id', "ShootDescription")
-        caption_input.send_keys(shoot_caption)
-        time.sleep(2)
+        set_bildeditor(driver)
 
-        # ввожу дату
-        day_input = driver.find_element('id', "DateFrom")
-        day_input.send_keys(today_date)
-
-        time_input = driver.find_element('id', 'TimeFrom')
-        time_input.send_keys(Keys.NUMPAD1)
-
-        time_input.send_keys(Keys.SPACE)
-
-        time_input = driver.find_element('id', 'TimeTo')
-        time_input.send_keys(Keys.NUMPAD2)
-
-        time_input.send_keys(Keys.SPACE)
-
-        # выпадающее меню выбираю с помощью кнопок клавиатуры
-        WebDriverWait(driver, 1).until(EC.element_to_be_clickable(('id', "CustomerContact")))
-        customer_input = driver.find_element('id', "CustomerContact")
-        customer_input.send_keys("Павленко Евгений Валентинович")
-
-        time.sleep(2)
-        customer_input.send_keys(Keys.DOWN)
-        customer_input.send_keys(Keys.ENTER)
-
-        # выбираю бильдредактора с помощью класса Select
-        select = Select(driver.find_element("name", 'EditorContactID'))
-        select.select_by_value('2571')
-
-        author_input = driver.find_element('id', "AuthorContact")
-        author_input.send_keys("Павленко Евгений Валентинович")
-        time.sleep(1)
-        author_input.send_keys(Keys.DOWN)
-        time.sleep(1)
-        author_input.send_keys(Keys.ENTER)
-        time.sleep(1)
+        set_author(driver)
 
         # confirm shoot creation
         driver.find_element('id', 'SubmitBtn').click()
@@ -96,7 +114,7 @@ def create_shoot():
         driver.close()
         driver.quit()
 
-        time.sleep(1)
+        # time.sleep(1)
 
     except Exception as ex:
         print(ex)
