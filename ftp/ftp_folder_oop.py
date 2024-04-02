@@ -1,6 +1,5 @@
 import ftplib
-import os
-from dotenv import load_dotenv
+from get_credentials import Credentials
 
 
 class FTPClient:
@@ -8,15 +7,12 @@ class FTPClient:
     FTP_DIR = "/PHOTO/INBOX/SHOOTS/Pavlenko_Evgenij_2571"
 
     def __init__(self, shoot_id):
-        load_dotenv()
-        self.ftp_login = os.environ.get('FTP_LOGIN')
-        self.ftp_pass = os.environ.get('FTP_PASS')
+        self.ftp_login = Credentials().ftp_login
+        self.ftp_pass = Credentials().ftp_pass
         self.shoot_id = shoot_id
-        self.ftp = ftplib.FTP(self.HOST, self.ftp_login, self.ftp_pass, timeout=1)
-
 
     def connect(self):
-
+        self.ftp = ftplib.FTP(self.HOST, self.ftp_login, self.ftp_pass, timeout=1)
         self.ftp.encoding = "cp1251"
         self.ftp.cwd(self.FTP_DIR)
 
@@ -37,6 +33,8 @@ class FTPClient:
     def ftp_close(self):
         self.ftp.quit()
 
-
-if __name__ == '__main__':
-    FTPClient('shoot_id').make_dir()
+# if __name__ == '__main__':
+# FTPClient('shoot_id').make_dir()
+# print(FTPClient.__dict__)
+# ftp1 = FTPClient('333')
+# print(ftp1.__dict__)
