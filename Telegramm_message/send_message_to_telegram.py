@@ -1,12 +1,10 @@
 import requests
-import os
-from dotenv import load_dotenv
+from get_credentials import Credentials
 
 
 def send_telegram_message(text: str):
-    load_dotenv()
-    token = os.environ.get('old_token')
-    channel_id = os.environ.get('channel_id')
+    token = Credentials().crazypythonbot
+    channel_id = Credentials().admin
 
     url = "https://api.telegram.org/bot"
     url += token
