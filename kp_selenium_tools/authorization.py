@@ -1,9 +1,7 @@
 from selenium import webdriver
-
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
-
-from Common.credentials import get_credentials
+from get_credentials import Credentials
 from kp_selenium_tools.crome_options import setting_chrome_options
 
 
@@ -16,8 +14,10 @@ class AuthorizationHandler:
         self.driver = webdriver.Chrome(service=self.service, options=setting_chrome_options())
 
     def perform_authorization(self):
-        login, password, first_loggin = get_credentials()
-        self.driver.get(first_loggin)
+        login = Credentials().kp_login
+        password = Credentials().kp_password
+        first_login = Credentials().first_login
+        self.driver.get(first_login)
         login_input = self.driver.find_element("id", "login")
         login_input.send_keys(login)
         password_input = self.driver.find_element("id", "password")
