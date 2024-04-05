@@ -6,13 +6,18 @@ pip install lxml
 
 from selenium.webdriver.common.by import By
 import os
-
 from Common.download_to_selected_folder import enable_download
 from Common.notification import system_notification
-from Common.selenium_tools import find_all_images_on_site_by_shoot_id_or_keyword
+from Common.regex_tools import make_preview_photo_link
+from Common.selenium_tools import find_all_images_on_site_by_shoot_id_or_keyword, page_source_from_selenium
 from Common.soup_tools import get_image_links
-from Common.tk_tools import select_folder_via_gui
 from kp_selenium_tools.authorization import AuthorizationHandler
+from loguru import logger
+
+from kp_selenium_tools.gui_information import gui_information_for_work_for_downloading_images_from_kp_archive
+from kp_selenium_tools.remove_image import delete_image_in_kp_photo_archive
+
+logger.disable('__main__')
 
 
 def make_shoot_edit_link(link):
@@ -21,49 +26,46 @@ def make_shoot_edit_link(link):
 
 
 def main_cycle():
-    range_number = images_number // 100 + 2  # количиство страниц выданных поиском
+    deleted_count = 0
+    count = 0
+    range_number = number_of_shots // 100 + 2  # количиство страниц выданных поиском
     for x in range(1, range_number):  # цикл по страницам съемки
-        page_link = f'{shoot_link}2&pg={x}'  # ссылка на страницу с номером
-        html = go_my_images(page_link, keyword=[], driver=driver)  # получаю html открытой страницы
+        page_link = f'{link}2&pg={x}'  # ссылка на страницу с номером
+        html = page_source_from_selenium(page_link, keyword=[], driver=driver)  # получаю html открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
         print(f'на странице {x} - {len(images_links)} снимков')
         for i in range(len(images_links)):  # (len(images_links)):
+            preview_photo_window_link, image_id, inner_id = make_preview_photo_link(images_links[i].get('href'))
             shoot_edit_link = make_shoot_edit_link(images_links[i].get('href'))
+            logger.info(shoot_edit_link)
             driver.get(shoot_edit_link)
+
+            # click to download image
             driver.find_element(By.CSS_SELECTOR,
                                 f"div.hi-subpanel:nth-child(3) > a:nth-child(4)").click()
 
-
-def images_number_in_shot():
-    try:
-        return int((driver.find_element(By.CSS_SELECTOR,
-                                        'body > table:nth-child(6) '
-                                        '> tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > '
-                                        'table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > '
-                                        'td:nth-child(1) > b:nth-child(1)').text).replace(' ', ''))
-    except Exception as ex:
-        print(ex)
-        print('снимков с данным ключевым словом не найдено')
-        return '0'
-
-
-def create_folder():
-    os.makedirs(f'{image_folder}/{shoot_id}', exist_ok=True)
+            # function to delete images
+            driver.get(preview_photo_window_link)
+            count, deleted_count = delete_image_in_kp_photo_archive(driver, count, image_id, deleted_count)
+    print(f'deleted {deleted_count}')
 
 
 if __name__ == '__main__':
-    shoot_id = input("input shoot id look like 'KSP_017***'\n")
-    # shoot_id = "KMO_192663"
-    image_folder = select_folder_via_gui()
+    # get information from user about shoot id and download directory
+    shoot_id, download_dir, keyword = gui_information_for_work_for_downloading_images_from_kp_archive()
 
-    download_dir = f'{image_folder}/{shoot_id}'
+    # authorization on site and enable selected download folder
     driver = AuthorizationHandler().authorize()
-    shoot_link = find_all_images_on_site_by_shoot_id_or_keyword(shoot_id, driver,
-                                                                only_kr=False)  # авторизируюсь и получаю ссылку на данную съемку
-    images_number = images_number_in_shot()  # int число с количеством снимков в съемке
-    enable_download()
-    print(f'{images_number = }')
+    enable_download(driver, download_dir)
+
+    # shoot_link = find_all_images_on_site_by_shoot_id_or_keyword(shoot_id, driver, only_kr=True)  # авторизируюсь и получаю ссылку на данную съемку
+    link, number_of_shots = find_all_images_on_site_by_shoot_id_or_keyword(driver, shoot_id, keyword=keyword,
+                                                                           only_kr=True)
+    logger.info(link)
+    logger.info(number_of_shots)
+
+    print(f'{number_of_shots = }')
     main_cycle()
     driver.close()
     driver.quit()
-    system_notification(f'Work completed for shoot {shoot_id}', f'{images_number} files downloaded to {download_dir}')
+    system_notification(f'Work completed for shoot {shoot_id}', f'{number_of_shots} files downloaded to {download_dir}')
