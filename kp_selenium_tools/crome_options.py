@@ -2,10 +2,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
-from pathlib import Path
 
 
-def download_folder(path_to_download_folder=f'{Path.home()}/Downloads'):
+def download_folder(path_to_download_folder='/Volumes/big4photo-4/selenium_downloads'):
     preferences = {
         "download.default_directory": path_to_download_folder
     }
@@ -15,10 +14,13 @@ def download_folder(path_to_download_folder=f'{Path.home()}/Downloads'):
 def setting_chrome_options():
     preferences = download_folder()
     chrome_options = Options()
-    chrome_options.add_experimental_option("prefs", preferences)
-    # chrome_options.add_argument("webdriver.chrome.driver=chromedriver")
+    # chrome_options.add_experimental_option("prefs", preferences)
+    chrome_options.add_argument("webdriver.chrome.driver=chromedriver")
+    # chrome_options.add_argument("--no-sandbox")  # Запуск Chrome без песочницы (sandbox)
+    # chrome_options.add_argument("--disable-dev-shm-usage")  # Отключение использования /dev/shm
+    # chrome_options.add_argument("--user-data-dir=/path/to/chrome-profile")  # Указание директории профиля
     # chrome_options.add_experimental_option('detach', True)
-    # chrome_options.add_argument("--headless")  # фоновый режим
+    chrome_options.add_argument("--headless")  # фоновый режим
     # chrome_options.add_argument("--ignore-certificate-errors")  # игнорирует ошибки сертификата SSL
     # chrome_options.add_argument("--disable-cache")  # отключает кэширование в браузере
     # chrome_options.add_argument("--start-maximized")
