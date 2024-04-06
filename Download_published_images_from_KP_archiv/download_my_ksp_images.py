@@ -3,9 +3,8 @@ pip install beautifulsoup4
 pip install selenium
 pip install lxml
 """
-
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
-import os
 from Common.download_to_selected_folder import enable_download
 from Common.notification import system_notification
 from Common.regex_tools import make_preview_photo_link
@@ -41,12 +40,15 @@ def main_cycle():
             driver.get(shoot_edit_link)
 
             # click to download image
-            driver.find_element(By.CSS_SELECTOR,
-                                f"div.hi-subpanel:nth-child(3) > a:nth-child(4)").click()
+            try:
+                driver.find_element(By.CSS_SELECTOR,
+                                    f"div.hi-subpanel:nth-child(3) > a:nth-child(4)").click()
 
-            # function to delete images
-            driver.get(preview_photo_window_link)
-            count, deleted_count = delete_image_in_kp_photo_archive(driver, count, image_id, deleted_count)
+                # function to delete images
+                driver.get(preview_photo_window_link)
+                count, deleted_count = delete_image_in_kp_photo_archive(driver, count, image_id, deleted_count)
+            except NoSuchElementException:
+                print(f"Couldn't download and delite image {image_id}")
     print(f'deleted {deleted_count}')
 
 
