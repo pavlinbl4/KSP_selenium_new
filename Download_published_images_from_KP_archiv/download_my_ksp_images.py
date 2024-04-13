@@ -3,6 +3,8 @@ pip install beautifulsoup4
 pip install selenium
 pip install lxml
 """
+import time
+
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from Common.download_to_selected_folder import enable_download
@@ -13,10 +15,11 @@ from Common.soup_tools import get_image_links
 from kp_selenium_tools.authorization import AuthorizationHandler
 from loguru import logger
 
-
 from kp_selenium_tools.remove_image import delete_image_in_kp_photo_archive
 
-logger.disable('__main__')
+# logger.disable('__main__')
+logger.add("output.log", format="{time} {level} {message}", level="ERROR")
+logger.add("output.log", format="{time} {level} {message}", level="INFO")
 
 
 def make_shoot_edit_link(link):
@@ -51,22 +54,19 @@ def main_cycle(number_of_shots, link, driver):
                 print(f"Couldn't download and delite image {image_id}")
     print(f'deleted {deleted_count}')
 
-def main_kp_downloader(shoot_id, download_dir, keyword):
-    # get information from user about shoot id and download directory
-    # shoot_id, download_dir, keyword = gui_information_for_work_for_downloading_images_from_kp_archive()
 
+def main_kp_downloader(shoot_id, download_dir, keyword):
     # authorization on site and enable selected download folder
     driver = AuthorizationHandler().authorize()
     enable_download(driver, download_dir)
 
-    # shoot_link = find_all_images_on_site_by_shoot_id_or_keyword(shoot_id, driver, only_kr=True)  # авторизуюсь и получаю ссылку на данную съемку
     link, number_of_shots = find_all_images_on_site_by_shoot_id_or_keyword(driver, shoot_id, keyword=keyword,
                                                                            only_kr=True)
-    logger.info(link)
     logger.info(number_of_shots)
 
-    print(f'{number_of_shots = }')
     main_cycle(number_of_shots, link, driver)
+    time.sleep(5)
+
     driver.close()
     driver.quit()
     system_notification(f'Work completed for shoot {shoot_id}', f'{number_of_shots} files downloaded to {download_dir}')
@@ -76,8 +76,3 @@ if __name__ == '__main__':
     shoot_id = ''
     download_dir = f'/Volumes/big4photo-4/selenium_downloads/keyword_слон'
     main_kp_downloader(shoot_id, download_dir, 'слон')
-
-
-
-
-
