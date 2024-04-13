@@ -13,7 +13,7 @@ from Common.soup_tools import get_image_links
 from kp_selenium_tools.authorization import AuthorizationHandler
 from loguru import logger
 
-from kp_selenium_tools.gui_information import gui_information_for_work_for_downloading_images_from_kp_archive
+
 from kp_selenium_tools.remove_image import delete_image_in_kp_photo_archive
 
 logger.disable('__main__')
@@ -24,10 +24,10 @@ def make_shoot_edit_link(link):
     return shoot_edit_link
 
 
-def main_cycle():
+def main_cycle(number_of_shots, link, driver):
     deleted_count = 0
     count = 0
-    range_number = number_of_shots // 100 + 2  # количиство страниц выданных поиском
+    range_number = number_of_shots // 100 + 2  # количество страниц выданных поиском
     for x in range(1, range_number):  # цикл по страницам съемки
         page_link = f'{link}2&pg={x}'  # ссылка на страницу с номером
         html = page_source_from_selenium(page_link, keyword=[], driver=driver)  # получаю html открытой страницы
@@ -51,23 +51,33 @@ def main_cycle():
                 print(f"Couldn't download and delite image {image_id}")
     print(f'deleted {deleted_count}')
 
-
-if __name__ == '__main__':
+def main_kp_downloader(shoot_id, download_dir, keyword):
     # get information from user about shoot id and download directory
-    shoot_id, download_dir, keyword = gui_information_for_work_for_downloading_images_from_kp_archive()
+    # shoot_id, download_dir, keyword = gui_information_for_work_for_downloading_images_from_kp_archive()
 
     # authorization on site and enable selected download folder
     driver = AuthorizationHandler().authorize()
     enable_download(driver, download_dir)
 
-    # shoot_link = find_all_images_on_site_by_shoot_id_or_keyword(shoot_id, driver, only_kr=True)  # авторизируюсь и получаю ссылку на данную съемку
+    # shoot_link = find_all_images_on_site_by_shoot_id_or_keyword(shoot_id, driver, only_kr=True)  # авторизуюсь и получаю ссылку на данную съемку
     link, number_of_shots = find_all_images_on_site_by_shoot_id_or_keyword(driver, shoot_id, keyword=keyword,
                                                                            only_kr=True)
     logger.info(link)
     logger.info(number_of_shots)
 
     print(f'{number_of_shots = }')
-    main_cycle()
+    main_cycle(number_of_shots, link, driver)
     driver.close()
     driver.quit()
     system_notification(f'Work completed for shoot {shoot_id}', f'{number_of_shots} files downloaded to {download_dir}')
+
+
+if __name__ == '__main__':
+    shoot_id = ''
+    download_dir = f'/Volumes/big4photo-4/selenium_downloads/keyword_слон'
+    main_kp_downloader(shoot_id, download_dir, 'слон')
+
+
+
+
+
