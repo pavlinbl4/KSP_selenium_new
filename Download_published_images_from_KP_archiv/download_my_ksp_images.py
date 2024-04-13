@@ -35,7 +35,7 @@ def main_cycle(number_of_shots, link, driver):
         page_link = f'{link}2&pg={x}'  # ссылка на страницу с номером
         html = page_source_from_selenium(page_link, keyword=[], driver=driver)  # получаю html открытой страницы
         images_links = get_image_links(html)  # получаю список ссылок редактирование изображения
-        print(f'на странице {x} - {len(images_links)} снимков')
+        logger.info(f'на странице {x} - {len(images_links)} снимков')
         for i in range(len(images_links)):  # (len(images_links)):
             preview_photo_window_link, image_id, inner_id = make_preview_photo_link(images_links[i].get('href'))
             shoot_edit_link = make_shoot_edit_link(images_links[i].get('href'))
@@ -46,13 +46,17 @@ def main_cycle(number_of_shots, link, driver):
             try:
                 driver.find_element(By.CSS_SELECTOR,
                                     f"div.hi-subpanel:nth-child(3) > a:nth-child(4)").click()
+                logger.info(f'downloading image {image_id}')
 
                 # function to delete images
-                driver.get(preview_photo_window_link)
-                count, deleted_count = delete_image_in_kp_photo_archive(driver, count, image_id, deleted_count)
+                try:
+                    driver.get(preview_photo_window_link)
+                    count, deleted_count = delete_image_in_kp_photo_archive(driver, count, image_id, deleted_count)
+                except NoSuchElementException:
+                    logger.info(f"Couldn't delite image {image_id}")
             except NoSuchElementException:
-                print(f"Couldn't download and delite image {image_id}")
-    print(f'deleted {deleted_count}')
+                logger.info(f"Couldn't download  image {image_id}")
+    logger.info(f'deleted {deleted_count} images')
 
 
 def main_kp_downloader(shoot_id, download_dir, keyword):
