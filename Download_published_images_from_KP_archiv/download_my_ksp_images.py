@@ -8,7 +8,6 @@ import time
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from Common.download_to_selected_folder import enable_download
-from Common.notification import system_notification
 from Common.regex_tools import make_preview_photo_link
 from Common.selenium_tools import find_all_images_on_site_by_shoot_id_or_keyword, page_source_from_selenium
 from Common.soup_tools import get_image_links
@@ -39,7 +38,7 @@ def main_cycle(number_of_shots, link, driver):
         for i in range(len(images_links)):  # (len(images_links)):
             preview_photo_window_link, image_id, inner_id = make_preview_photo_link(images_links[i].get('href'))
             shoot_edit_link = make_shoot_edit_link(images_links[i].get('href'))
-            logger.info(shoot_edit_link)
+
             driver.get(shoot_edit_link)
 
             # click to download image
@@ -73,10 +72,11 @@ def main_kp_downloader(shoot_id, download_dir, keyword):
 
     driver.close()
     driver.quit()
-    system_notification(f'Work completed for shoot {shoot_id}', f'{number_of_shots} files downloaded to {download_dir}')
+    logger.info(f'Work completed for shoot {shoot_id}', f'{number_of_shots} files downloaded to {download_dir}')
 
 
 if __name__ == '__main__':
-    shoot_id = ''
-    download_dir = f'/Volumes/big4photo-4/selenium_downloads/keyword_слон'
-    main_kp_downloader(shoot_id, download_dir, 'слон')
+    shoot_id_ = ''
+
+    download_dir_ = f'/Volumes/big4photo-4/selenium_downloads/keyword_слон'
+    main_kp_downloader(shoot_id_, download_dir_, 'слон')
